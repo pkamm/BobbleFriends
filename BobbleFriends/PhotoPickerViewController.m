@@ -25,7 +25,7 @@
     if (self) {
         // Custom initialization
     }
-    return self;
+    return self; 
 }
 
 - (void)viewDidLoad
