@@ -22,15 +22,12 @@
 		8831CD50166ECBDA00D21F2F /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8831CD4F166ECBDA00D21F2F /* Default.png */; };
 		8831CD5D1670528C00D21F2F /* AudioRecorderViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8831CD5B1670528A00D21F2F /* AudioRecorderViewController.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8831CD5E1670528C00D21F2F /* AudioRecorderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8831CD5C1670528B00D21F2F /* AudioRecorderViewController.xib */; };
-		8834275817E89A4200AA1B9E /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275217E89A4200AA1B9E /* libTestFlight.a */; };
 		8834275917E89A4200AA1B9E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 8834275317E89A4200AA1B9E /* README.md */; };
 		8834275A17E89A4200AA1B9E /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 8834275417E89A4200AA1B9E /* release_notes.md */; };
 		8834276017E8A39800AA1B9E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8834275F17E8A39800AA1B9E /* Default-568h@2x.png */; };
 		883D356D1608262A00070909 /* libObjectAL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 883D356C1608262A00070909 /* libObjectAL.a */; };
 		883D35701608265C00070909 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 883D356F1608265C00070909 /* AudioToolbox.framework */; };
 		883D35721608279900070909 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 883D35711608279900070909 /* OpenAL.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		883DD519180742F5000B0CB3 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275D17E89B9A00AA1B9E /* libFlurry_4.2.3.a */; };
-		883DD51A18074308000B0CB3 /* libFlurryAds_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834274F17E8976A00AA1B9E /* libFlurryAds_4.2.3.a */; };
 		8842183916DEE5FE00377055 /* ChooseMouthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8842183816DEE5FE00377055 /* ChooseMouthViewController.m */; };
 		8850321B15CED0FD0026CAFD /* ZoomingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8850321915CED0FD0026CAFD /* ZoomingImageView.m */; };
 		885DFE7316D2DEB3003FEE7E /* pitchShift.mm in Sources */ = {isa = PBXBuildFile; fileRef = 885DFE7116D2DEB1003FEE7E /* pitchShift.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -257,6 +254,9 @@
 		88EEF7C016267705000D7FF7 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88EEF7BF16267705000D7FF7 /* CoreImage.framework */; };
 		88F27CCE163787C7008B4AEA /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F27CCD163787C7008B4AEA /* CoreVideo.framework */; };
 		88F27CD1163787E7008B4AEA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88F27CD0163787E7008B4AEA /* CoreMedia.framework */; };
+		88FD58661880100F009C0444 /* libFlurryAds_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88FD58651880100F009C0444 /* libFlurryAds_4.2.3.a */; };
+		88FD5867188010EB009C0444 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275D17E89B9A00AA1B9E /* libFlurry_4.2.3.a */; };
+		88FD586818801CA6009C0444 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275217E89A4200AA1B9E /* libTestFlight.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -281,9 +281,6 @@
 		8831CD5A1670528A00D21F2F /* AudioRecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorderViewController.h; sourceTree = "<group>"; };
 		8831CD5B1670528A00D21F2F /* AudioRecorderViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioRecorderViewController.mm; sourceTree = "<group>"; };
 		8831CD5C1670528B00D21F2F /* AudioRecorderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudioRecorderViewController.xib; sourceTree = "<group>"; };
-		8834274D17E8976A00AA1B9E /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAdDelegate.h; sourceTree = "<group>"; };
-		8834274E17E8976A00AA1B9E /* FlurryAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAds.h; sourceTree = "<group>"; };
-		8834274F17E8976A00AA1B9E /* libFlurryAds_4.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAds_4.2.3.a; sourceTree = "<group>"; };
 		8834275217E89A4200AA1B9E /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		8834275317E89A4200AA1B9E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		8834275417E89A4200AA1B9E /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -544,6 +541,9 @@
 		88EEF7BF16267705000D7FF7 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		88F27CCD163787C7008B4AEA /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		88F27CD0163787E7008B4AEA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		88FD58631880100F009C0444 /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAdDelegate.h; sourceTree = "<group>"; };
+		88FD58641880100F009C0444 /* FlurryAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAds.h; sourceTree = "<group>"; };
+		88FD58651880100F009C0444 /* libFlurryAds_4.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAds_4.2.3.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -551,15 +551,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				883DD51A18074308000B0CB3 /* libFlurryAds_4.2.3.a in Frameworks */,
-				883DD519180742F5000B0CB3 /* libFlurry_4.2.3.a in Frameworks */,
-				8834275817E89A4200AA1B9E /* libTestFlight.a in Frameworks */,
+				88FD586818801CA6009C0444 /* libTestFlight.a in Frameworks */,
+				88FD5867188010EB009C0444 /* libFlurry_4.2.3.a in Frameworks */,
 				8872B11817E8916A001C9FD5 /* SystemConfiguration.framework in Frameworks */,
 				88097F9B176BBBC80020FED6 /* Security.framework in Frameworks */,
 				88D4446F175F4CF200AE199B /* MediaPlayer.framework in Frameworks */,
 				88899BC7161D1D43004583BE /* libz.dylib in Frameworks */,
 				88CC744216AFA5D6008F035C /* CoreAudio.framework in Frameworks */,
 				88CC744016AFA5C5008F035C /* Accelerate.framework in Frameworks */,
+				88FD58661880100F009C0444 /* libFlurryAds_4.2.3.a in Frameworks */,
 				886586421665C29900F31A25 /* Social.framework in Frameworks */,
 				886586401665B8B900F31A25 /* AdSupport.framework in Frameworks */,
 				8865863C1665B81D00F31A25 /* Accounts.framework in Frameworks */,
@@ -580,16 +580,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8834274C17E8976A00AA1B9E /* FlurryAds */ = {
-			isa = PBXGroup;
-			children = (
-				8834274D17E8976A00AA1B9E /* FlurryAdDelegate.h */,
-				8834274E17E8976A00AA1B9E /* FlurryAds.h */,
-				8834274F17E8976A00AA1B9E /* libFlurryAds_4.2.3.a */,
-			);
-			path = FlurryAds;
-			sourceTree = "<group>";
-		};
 		8834275117E89A4200AA1B9E /* TestFlightSDK2.0.0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -967,9 +957,9 @@
 		88ED07E415A880FB009848E8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				88FD58621880100F009C0444 /* FlurryAds */,
 				8834275117E89A4200AA1B9E /* TestFlightSDK2.0.0 */,
 				8834275B17E89B9A00AA1B9E /* Flurry */,
-				8834274C17E8976A00AA1B9E /* FlurryAds */,
 				88CC743216AFA30A008F035C /* Novocaine */,
 				88D73E16166976020010091A /* Foco */,
 				88ED07E515A880FB009848E8 /* BobbleFriends-Info.plist */,
@@ -981,6 +971,16 @@
 			);
 			name = "Supporting Files";
 			path = BobbleFriends;
+			sourceTree = "<group>";
+		};
+		88FD58621880100F009C0444 /* FlurryAds */ = {
+			isa = PBXGroup;
+			children = (
+				88FD58631880100F009C0444 /* FlurryAdDelegate.h */,
+				88FD58641880100F009C0444 /* FlurryAds.h */,
+				88FD58651880100F009C0444 /* libFlurryAds_4.2.3.a */,
+			);
+			path = FlurryAds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1358,8 +1358,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Peter Kamm (TDPP2BKPL6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Peter Kamm (TDPP2BKPL6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1372,16 +1372,19 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.1\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.2.6\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/Flurry\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.1\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.2.6\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/Flurry\\\\\\\\\\\\\\\"",
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/FlurryAds,
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/Flurry,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/Flurry,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/FlurryAds,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/FlurryAds,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/Flurry,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lsqlite3.0";
@@ -1413,16 +1416,19 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.1\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.2.6\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/BobbleFriends/Flurry\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.1\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/TestFlightSDK1.2.6\\\\\\\\\\\\\\\"",
+					"\\\\\\\\\\\\\\\"$(SRCROOT)/BobbleFriends/Flurry\\\\\\\\\\\\\\\"",
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/FlurryAds,
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 					/Users/pkamm/Desktop/BobbleFriends/BobbleFriends/Flurry,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/Flurry,
 					/Users/pkamm/Documents/BobbleFriends/BobbleFriends/FlurryAds,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/FlurryAds,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/Flurry,
+					/Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/TestFlightSDK2.0.0,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lsqlite3.0";
