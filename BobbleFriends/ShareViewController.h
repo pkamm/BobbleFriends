@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h> 
+#import <MessageUI/MFMessageComposeViewController.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-
-@interface ShareViewController : UIViewController <FBFriendPickerDelegate, UITextViewDelegate>
+@interface ShareViewController : UIViewController <FBFriendPickerDelegate, UITextViewDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;

@@ -257,6 +257,8 @@
 		88FD58661880100F009C0444 /* libFlurryAds_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88FD58651880100F009C0444 /* libFlurryAds_4.2.3.a */; };
 		88FD5867188010EB009C0444 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275D17E89B9A00AA1B9E /* libFlurry_4.2.3.a */; };
 		88FD586818801CA6009C0444 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8834275217E89A4200AA1B9E /* libTestFlight.a */; };
+		88FD586A188190CE009C0444 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88FD5869188190CE009C0444 /* MessageUI.framework */; };
+		88FD586C18819720009C0444 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88FD586B18819720009C0444 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -544,6 +546,8 @@
 		88FD58631880100F009C0444 /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAdDelegate.h; sourceTree = "<group>"; };
 		88FD58641880100F009C0444 /* FlurryAds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAds.h; sourceTree = "<group>"; };
 		88FD58651880100F009C0444 /* libFlurryAds_4.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAds_4.2.3.a; sourceTree = "<group>"; };
+		88FD5869188190CE009C0444 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		88FD586B18819720009C0444 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -551,6 +555,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88FD586C18819720009C0444 /* MobileCoreServices.framework in Frameworks */,
+				88FD586A188190CE009C0444 /* MessageUI.framework in Frameworks */,
 				88FD586818801CA6009C0444 /* libTestFlight.a in Frameworks */,
 				88FD5867188010EB009C0444 /* libFlurry_4.2.3.a in Frameworks */,
 				8872B11817E8916A001C9FD5 /* SystemConfiguration.framework in Frameworks */,
@@ -890,6 +896,8 @@
 		88ED07DC15A880FB009848E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				88FD586B18819720009C0444 /* MobileCoreServices.framework */,
+				88FD5869188190CE009C0444 /* MessageUI.framework */,
 				88097F97176BB9990020FED6 /* FacebookSDK.framework */,
 				88F27CD0163787E7008B4AEA /* CoreMedia.framework */,
 				88F27CCD163787C7008B4AEA /* CoreVideo.framework */,

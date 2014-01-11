@@ -165,12 +165,12 @@
 }
 
 -(void)uploadiOS5Plus:(id<FBGraphUser>)user{
-        UIActivityIndicatorView *newInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [newInd setCenter:self.view.center];
-        [self.view addSubview:newInd];
-        [newInd setHidden:NO];
-        [newInd startAnimating];
-        [self.shareButton setEnabled:NO];
+    UIActivityIndicatorView *newInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [newInd setCenter:self.view.center];
+    [self.view addSubview:newInd];
+    [newInd setHidden:NO];
+    [newInd startAnimating];
+    [self.shareButton setEnabled:NO];
 
     if (FBSession.activeSession.isOpen) {
         
@@ -270,6 +270,96 @@
     
     return YES;
 }
+- (IBAction)SMSShareButtonPressed:(id)sender {
+    MFMessageComposeViewController *tempMailCompose = [[MFMessageComposeViewController alloc] init];
+	
+	tempMailCompose.messageComposeDelegate = self;
+	[tempMailCompose setSubject:@"Bobble Friend"];
+	[tempMailCompose setBody:@"Here's your bobble"];
+    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0];
+    NSString* filePath = [[documents stringByAppendingPathComponent:[APP_DELEGATE outputFileName]] stringByAppendingString:@".mov"];
+    NSData *vidData = [NSData dataWithContentsOfFile:filePath];
+    [tempMailCompose addAttachmentData:vidData typeIdentifier:(NSString*)kUTTypeMovie filename:@"BobbleFriend.mov"];
+    [self.delegate presentViewController:tempMailCompose animated:YES
+                              completion:^{
+                                  
+                              }];
+}
+- (IBAction)emailSharebuttonPressed:(id)sender {
+    [self displayComposerSheet:@"Send ya bobble"];
+}
+
+// Displays an email composition interface inside the application. Populates all the Mail fields.
+- (void) displayComposerSheet:(NSString *)body {
+	
+	MFMailComposeViewController *tempMailCompose = [[MFMailComposeViewController alloc] init];
+	
+	tempMailCompose.mailComposeDelegate = self;
+	[tempMailCompose setSubject:@"Bobble Friend"];
+	[tempMailCompose setMessageBody:body isHTML:NO];
+    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0];
+    NSString* filePath = [[documents stringByAppendingPathComponent:[APP_DELEGATE outputFileName]] stringByAppendingString:@".mov"];
+    NSData *vidData = [NSData dataWithContentsOfFile:filePath];
+    [tempMailCompose addAttachmentData:vidData mimeType:@"video/quicktime" fileName:@"BobbleFriend"];
+	
+    [self.delegate presentViewController:tempMailCompose animated:YES
+                     completion:^{
+                         
+                     }];
+}
+
+// Dismisses the email composition interface when users tap Cancel or Send. Proceeds to update the message field with the result of the operation.
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	// Notifies users about errors associated with the interface
+	switch (result)
+	{
+		case MFMailComposeResultCancelled:
+			NSLog(@"Result: canceled");
+			break;
+		case MFMailComposeResultSaved:
+			NSLog(@"Result: saved");
+			break;
+		case MFMailComposeResultSent:
+			NSLog(@"Result: sent");
+			break;
+		case MFMailComposeResultFailed:
+			NSLog(@"Result: failed");
+			break;
+		default:
+			NSLog(@"Result: not sent");
+			break;
+	}
+	[self.delegate dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+// Launches the Mail application on the device. Workaround
+-(void)launchMailAppOnDevice:(NSString *)body{
+	NSString *recipients = [NSString stringWithFormat:@"mailto:%@?subject=%@", @"test@mail.com", @"iPhone App recommendation"];
+	NSString *mailBody = [NSString stringWithFormat:@"&body=%@", body];
+	
+	NSString *email = [NSString stringWithFormat:@"%@%@", recipients, mailBody];
+	email = [email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+}
+
+// Call this method and pass parameters
+-(void) showComposer:(id)sender{
+	Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
+	if (mailClass != nil){
+		// We must always check whether the current device is configured for sending emails
+		if ([mailClass canSendMail]){
+			[self displayComposerSheet:sender];
+		}else{
+			[self launchMailAppOnDevice:sender];
+		}
+	}else{
+		[self launchMailAppOnDevice:sender];
+	}
+}
+
 
 -(void)textViewDidBeginEditing:(UITextView *)textView{
     textView.text = @"";
