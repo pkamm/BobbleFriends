@@ -849,22 +849,30 @@
             }];
     */
     
-    if (mouthChangeCount >=5) {
-        
+  //  if (mouthChangeCount >=5) {
+    
+    NSLog(@"Max Freq: %f",maxMag);
+    
         dispatch_async(dispatch_get_main_queue(), ^{
             if (maxMag < 100) {
                 [(MainBobbleViewController*)self.delegate setMouth:0];
-            }else if(maxMag < 600){
+            }else if(maxMag >= 100 && maxMag < 200){
                 [(MainBobbleViewController*)self.delegate setMouth:1];
-            }else{
+            }else if(maxMag >= 200 && maxMag < 300){
                 [(MainBobbleViewController*)self.delegate setMouth:2];
+            }else if(maxMag >= 300 && maxMag < 400){
+                [(MainBobbleViewController*)self.delegate setMouth:3];
+            }else if(maxMag >= 400 && maxMag < 500){
+                [(MainBobbleViewController*)self.delegate setMouth:4];
+            }else{
+                [(MainBobbleViewController*)self.delegate setMouth:5];
             }
         });
-        mouthChangeCount = 0;
-    }else{
-        mouthChangeCount++;
-    }
-    
+//        mouthChangeCount = 0;
+//    }else{
+//        mouthChangeCount++;
+//    }
+//    
     
     
     /*if (maxMagnitude > 1.2) {

@@ -29,15 +29,12 @@ NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblef
  //   [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
     
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]]];
+
+    
     [Flurry startSession:@"NXYM7TZFYTR9RTHHQCKC"];
     [FlurryAds initialize:window.rootViewController];
     [Flurry logEvent:@"OPEN_APP_FRESH"];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    
-    [userDefaults registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]]];
-
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
 
     // Override point for customization after application launch.
     @try {

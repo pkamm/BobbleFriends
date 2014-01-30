@@ -48,10 +48,12 @@
     [self.zoomingImageView setContentMode:UIViewContentModeCenter];
     [self.zoomingImageView setBackgroundColor:[UIColor clearColor]];
     [self.faceHolderView insertSubview:self.zoomingImageView belowSubview:self.faceCropOutlineImageView];
-    self.overlay = [[CopOverlayViewController alloc] init];
-    [self.overlay setDelegate:self];
-    [self.view addSubview:self.overlay.view];
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldShowCropInfo"]) {
+        self.overlay = [[CopOverlayViewController alloc] init];
+        [self.overlay setDelegate:self];
+        [self.view addSubview:self.overlay.view];
+    }
 }
 
 -(void)hideOverlay{

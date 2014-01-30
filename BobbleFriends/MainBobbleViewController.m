@@ -254,14 +254,14 @@ interstitial {
 
 -(void)animation1{
 
-    [self.bobblingHeadView setTransform:[self createNextTransform]];
+    [self.bobblingHeadView setTransform:[self createNextTransform:NO]];
     if ([_audioRecorder recordTimer]) {
         _mouthLevels[_currentMouthFrame] = self.headImageView.tag;
         _currentMouthFrame++;
     }
 }
 
--(CGAffineTransform)createNextTransform{
+-(CGAffineTransform)createNextTransform:(BOOL)forVideo{
     
     if (_speedSlider) {
         _bobbleSpeed = _speedSlider.speedSlider.value;
@@ -284,29 +284,14 @@ interstitial {
         currentRotation -= rotateSpeed;
     }
     
- //   CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(currentRotation);
-    CGAffineTransform rotationTransform = [self CGAffineTransformMakeRotationAtAngle:currentRotation point:CGPointMake(0, 78)];
+    CGAffineTransform rotationTransform;
+    if (forVideo) {
+        rotationTransform = [self CGAffineTransformMakeRotationAtAngle:currentRotation point:CGPointMake(0, 18)];
+    }else{
+        rotationTransform = [self CGAffineTransformMakeRotationAtAngle:currentRotation point:CGPointMake(0, 78)];
+    }
+// CGAffineTransform rotationTransform = [self CGAffineTransformMakeRotationAtAngle:currentRotation point:CGPointMake(0, 20)];
     
-/*
-    if ((currentX + xSpeed > xLength && xPositiveDirection) || (currentX - xSpeed < -xLength && !xPositiveDirection)){
-        xPositiveDirection = !xPositiveDirection;
-    }else{
-        if (xPositiveDirection) {
-            currentX += xSpeed;
-        }else{
-            currentX -= xSpeed;
-        }
-    }
-    if ((currentY + ySpeed > yLength && yPositiveDirection) || (currentY - ySpeed < -yLength && !yPositiveDirection)){
-        yPositiveDirection = !yPositiveDirection;
-    }else{
-        if (yPositiveDirection) {
-            currentY += ySpeed;
-        }else{
-            currentY -= ySpeed;
-        }
-    }
-*/
     CGAffineTransform translationTransform = CGAffineTransformMakeTranslation(currentX, currentY);
     CGAffineTransform nextTransform = CGAffineTransformConcat(rotationTransform, translationTransform);
 
@@ -367,7 +352,6 @@ interstitial {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGLayerRef layerRef= CGLayerCreateWithContext(ctx,self.backgroundImage.bounds.size,NULL);
     CGContextRef layerContext = CGLayerGetContext(layerRef);
-    
 
     CGContextDrawImage(layerContext, self.backgroundImage.bounds, [[self backgroundImage] image].CGImage);
 
@@ -376,25 +360,18 @@ interstitial {
 
     CGContextDrawImage(layerContext, bodyFrame, [[self bodyImage] image].CGImage);
     
-//    CGContextTranslateCTM(layerContext, 0.0, self.backgroundImage.bounds.size.height);
-//    CGContextScaleCTM(layerContext, 1.0, -1.0);
+    //rotate and draw head
+    CGAffineTransform transform = [self createNextTransform:YES];
     
-//    CGContextTranslateCTM(layerContext, 0.0, self.backgroundImage.bounds.size.height);
-//    CGContextScaleCTM(layerContext, 1.0, -1.0);
+    CGContextTranslateCTM(layerContext, self.backgroundImage.bounds.size.width*0.5, self.backgroundImage.bounds.size.height*0.5);
+    CGContextConcatCTM(layerContext, transform);
+    CGContextTranslateCTM(layerContext, -self.backgroundImage.bounds.size.width*0.5, -self.backgroundImage.bounds.size.height*0.5);
     
-
-    CGAffineTransform transform = [self createNextTransform];
-
-    [self transformContext:layerContext withTransform:transform];
-    CGRect headFrame = self.bobblingHeadView.frame;
-    headFrame.origin.y = self.backgroundImage.bounds.size.height - headFrame.origin.y - headFrame.size.height ;
-    
+    CGRect headFrame = self.headImageView.frame;
+    headFrame.origin.y = self.backgroundImage.bounds.size.height - self.bobblingHeadView.frame.origin.y - headFrame.size.height;
+    headFrame.origin.x = self.backgroundImage.bounds.size.width/2 - headFrame.size.width/2;
     CGContextDrawImage(layerContext, headFrame, headImage.CGImage);
 
-//    CGContextTranslateCTM(layerContext, 0.0, self.backgroundImage.bounds.size.height);
-//    CGContextScaleCTM(layerContext, 1.0, -1.0);
-//    [self transformContext:layerContext withTransform:CGAffineTransformInvert(transform)];
-    
     CGContextTranslateCTM(ctx, 0.0, self.backgroundImage.bounds.size.height);
     CGContextScaleCTM(ctx, 1.0, -1.0);
     CGContextDrawLayerInRect(ctx,self.backgroundImage.bounds,layerRef);
@@ -403,7 +380,6 @@ interstitial {
     UIGraphicsEndImageContext();
     return newImage;
 }
-
 
 
 -(void)resetBobble{
@@ -624,9 +600,7 @@ interstitial {
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:audio_inputFilePath]){
         
-                
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (tempPath)) {
-            
             UISaveVideoAtPathToSavedPhotosAlbum(tempPath ,nil,nil,nil);
         }
         
@@ -822,14 +796,13 @@ interstitial {
 }
 
 -(void)transformContext:(CGContextRef)ctx withTransform:(CGAffineTransform)transform{
-    CGRect rect = CGRectMake(0, 0, self.bobblingHeadView.bounds.size.width, self.bobblingHeadView.bounds.size.height);
 
  //   CGContextClearRect(ctx, rect);
     
     // Transform the image (as the image view has been transformed)
-    CGContextTranslateCTM(ctx, rect.size.width*0.5, rect.size.height*0.5);
+    CGContextTranslateCTM(ctx, self.backgroundImage.bounds.size.width*0.5, self.backgroundImage.bounds.size.height*0.5);
     CGContextConcatCTM(ctx, transform);
-    CGContextTranslateCTM(ctx, -rect.size.width*0.5, -rect.size.height*0.5);
+    CGContextTranslateCTM(ctx, -self.backgroundImage.bounds.size.width*0.5, -self.backgroundImage.bounds.size.height*0.5);
     
     // Tanslate and scale upside-down to compensate for Quartz's inverted coordinate system
 //    CGContextTranslateCTM(ctx, 0.0, rect.size.height);

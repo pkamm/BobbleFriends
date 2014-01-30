@@ -112,7 +112,7 @@
     
     NSMutableArray *tempImageArray = [NSMutableArray arrayWithCapacity:3];
     NSLog(@"%f %f %f %f",self.mouthImageView.frame.origin.x,self.mouthImageView.frame.origin.x, self.mouthImageView.frame.size.width, self.mouthImageView.frame.size.height);
-    for (int i = 0; i <= 7; i++) {
+    for (int i = 0; i <= 5; i++) {
         UIGraphicsBeginImageContextWithOptions(self.headImageView.frame.size, NO, 0.0f);
 //        [self.headImageView.image drawInRect:self.headImageView.frame];
         [self.headImageView.image drawInRect:CGRectMake(0, 0, self.headImageView.frame.size.width, self.headImageView.frame.size.height)];
@@ -163,9 +163,6 @@
                 case 5:
                     mouthImage = [UIImage imageNamed:@"mouth_male_06"];
                     break;
-                case 6:
-                    mouthImage = [UIImage imageNamed:@"mouth_male_07"];
-                    break;
                 default:
                     break;
             }
@@ -191,9 +188,6 @@
                     break;
                 case 5:
                     mouthImage = [UIImage imageNamed:@"female_mouth_06"];
-                    break;
-                case 6:
-                    mouthImage = [UIImage imageNamed:@"female_mouth_07"];
                     break;
                 default:
                     break;

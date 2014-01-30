@@ -39,6 +39,8 @@
 
 }
 - (IBAction)dontShowAgainButtonPressed:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"shouldShowCropInfo"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [self.delegate performSelector:@selector(hideOverlay) withObject:nil];
 }
 

@@ -55,7 +55,7 @@
 
 @property (strong, nonatomic) NSArray *headWithMouthImages;
 
-- (CGAffineTransform)createNextTransform;
+- (CGAffineTransform)createNextTransform:(BOOL)forVideo;
 -(void)setMouth:(int)mouthLevel;
 -(void)showInterstitialAd;
 

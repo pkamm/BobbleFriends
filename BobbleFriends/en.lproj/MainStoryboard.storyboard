@@ -446,11 +446,11 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="center" image="bg_beach.png" id="z6b-w9-wN0">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
+                                <rect key="frame" x="0.0" y="8" width="320" height="519"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="center" image="bobble_male_surfer.png" id="NPw-by-p1o">
-                                <rect key="frame" x="44" y="188" width="233" height="322"/>
+                                <rect key="frame" x="44" y="174" width="233" height="322"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="n2N-zS-bf4">

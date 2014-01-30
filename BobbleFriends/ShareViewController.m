@@ -94,6 +94,9 @@
 //        [self.loadingIndicator setHidesWhenStopped:YES];
 //        [self.loadingIndicator stopAnimating];
 //        [self.loadingIndicator setHidden:YES];
+        [self.shareEmailButton setEnabled:YES];
+        [self.shareFBButton setEnabled:YES];
+        [self.shareTextButton setEnabled:YES];
         [self.shareButton setEnabled:YES];
         [self.progressLoadingInidicator setProgressTintColor:[UIColor greenColor]];
     }];
