@@ -15,20 +15,18 @@
 
 @interface SavedBobbleTableCell : UITableViewCell{
 }
-@property (weak, nonatomic) id delegate;
-@property (weak, nonatomic) IBOutlet UILabel *bobbleTitle;
-@property (weak, nonatomic) IBOutlet UIImageView *bobbleImage;
-@property (strong, nonatomic) NSString *filePath;
-@property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
 
 
 @end
 
 
 @interface SavedBobbleViewController : ShareViewController<FBFriendPickerDelegate, UIAlertViewDelegate>{
-    NSDateFormatter *_dateFormatter;
+//    NSDateFormatter *_dateFormatter;
 }
 @property (weak, nonatomic) IBOutlet UITableView *savedBobbleTableView;
 @property (strong, nonatomic) MPMoviePlayerViewController *player;
+
+-(void)playBobbleMovie:(NSString*)bobbleID;
+
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "ObjectAL.h"
 #import "AudioRecorderViewController.h"
 #import "SpeedModulationViewController.h"
 #import "ShareViewController.h"
@@ -17,8 +16,6 @@
     UIImage* originalImage;
     
     NSTimer *animationTimer;
-    
-    float bobbleSpeed;
     
     float currentX;
     float currentY;
@@ -58,8 +55,5 @@
 - (CGAffineTransform)createNextTransform:(BOOL)forVideo;
 -(void)setMouth:(int)mouthLevel;
 -(void)showInterstitialAd;
-
-
-
 
 @end

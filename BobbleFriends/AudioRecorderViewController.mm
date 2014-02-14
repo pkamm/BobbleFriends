@@ -7,15 +7,10 @@
 //
 
 #import "AudioRecorderViewController.h"
-//#import "ObjectAL.h"
-//#import "ALCaptureDevice.h"
 #import "AppDelegate.h"
 #import "MainBobbleViewController.h"
-#import "pitchShift.h"
 
-
-#define MAX_FRAME_LENGTH 4096	// tz
-
+#define MAX_FRAME_LENGTH 4096
 
 @interface AudioRecorderViewController ()
 
@@ -38,89 +33,17 @@
     mouthChangeCount = 0;
 }
 
-
 -(void)viewDidAppear:(BOOL)animated{
-    NSLog(@"shouldbethere");
     ringBuffer = new RingBuffer(32768, 2);
     audioManager = [Novocaine audioManager];
     [self FFTSetup];
     _timerDuration = -1;
     _timerCounter = 0;
-
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [APP_DELEGATE setSoundPitchValue:effectPitch];
 }
-
-/*
-- (IBAction)recordAudioPressed:(id)sender {
-    
-    effectPitch = 1.;
-//    [[self pitchSlider] setValue:effectPitch animated:YES];
-    
-    if (!audioRecorder.recording)
-    {
-        
-        NSError *setCategoryError = nil;
-        
-        NSError *setCategoryErr = nil;
-        NSError *activationErr  = nil;
-        //Set the general audio session category
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: &setCategoryErr];
-        
-        UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
-        
-        AudioSessionSetProperty (
-                                 kAudioSessionProperty_OverrideAudioRoute,
-                                 sizeof (audioRouteOverride),
-                                 &audioRouteOverride                      
-                                 );
-        
-        //Make the default sound route for the session be to use the speaker
-        UInt32 doChangeDefaultRoute = 1;
-        AudioSessionSetProperty (kAudioSessionProperty_OverrideCategoryDefaultToSpeaker, sizeof (doChangeDefaultRoute), &doChangeDefaultRoute);
-        
-        //Activate the customized audio session
-        [[AVAudioSession sharedInstance] setActive: YES error: &activationErr];
-        
-        if (setCategoryError) { NSLog(@"%@, %@",[setCategoryError localizedDescription], [setCategoryError userInfo]); }
-        
-        NSURL *soundFileURL = [NSURL fileURLWithPath:[APP_DELEGATE soundFilePath]];
-        
-        NSDictionary *recordSettings = [NSDictionary
-                                        dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithInt:AVAudioQualityMax],
-                                        AVEncoderAudioQualityKey,
-                                        [NSNumber numberWithInt:16],
-                                        AVEncoderBitRateKey,
-                                        [NSNumber numberWithInt: 2],
-                                        AVNumberOfChannelsKey,
-                                        [NSNumber numberWithFloat:44100.0],
-                                        AVSampleRateKey,
-                                        nil];
-        
-        NSError *error = nil;
-        
-        audioRecorder = [[AVAudioRecorder alloc]
-                         initWithURL:soundFileURL
-                         settings:recordSettings
-                         error:&error];
-        
-        if (error)
-        {
-            NSLog(@"error: %@", [error localizedDescription]);
-            
-        } else {
-            [audioRecorder prepareToRecord];
-        }
-        
-        playButton.enabled = NO;
-        stopButton.enabled = YES;
-        [audioRecorder record];
-    }
-}
-*/
 
 -(void)increaseTimer:(NSTimer*)timer{
     _timerCounter++;
@@ -140,9 +63,11 @@
 }
 
 - (IBAction)recordAudioPressed:(id)sender{
+    
     [self.stopButton setEnabled:YES];
     [self.recordButton setEnabled:NO];
     [self.playButton setEnabled:NO];
+    
     _timerCounter = 0;
     _timerDuration = -1;
     _recordTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(increaseTimer:) userInfo:nil repeats:YES];
@@ -151,7 +76,6 @@
     NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
     NSURL *outputFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/audio.m4a"]];
 
-   // NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
     NSLog(@"audio output URL: %@", outputFileURL);
     
     NSError* err = nil;
@@ -164,10 +88,9 @@
     
     audioManager.inputBlock = ^(float *data, UInt32 numFrames, UInt32 numChannels) {
 
-        //[self fftPassThrough:numFrames buffer:data];
-//        [self fftPitchShift:numFrames buffer:data];
-
+        //Shift pitch on record for export to movie
         [self fftPitchShift:numFrames buffer:data];
+        
         [fileWriter writeNewAudio:data numFrames:numFrames numChannels:numChannels];
 
         if (![[self stopButton] isEnabled]) {
@@ -199,17 +122,15 @@
     // Point to Document directory
     NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
     // Write out the contents of home directory to console
-        NSError *error;
+    NSError *error;
 
-        NSLog(@"Documents directory: %@", [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documents error:&error]);
+    NSLog(@"Documents directory: %@", [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documents error:&error]);
     
     UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
     AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
-//   NSURL *inputFileURL = [[NSBundle mainBundle] URLForResource:@"TLC" withExtension:@"mp3"];
-//  NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
+
     NSURL *inputFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/audio.m4a"]];
     NSLog(@"audio input URL: %@", inputFileURL);
-    
     
    fileReader = [[AudioFileReader alloc]
                   initWithAudioFileURL:inputFileURL
@@ -222,10 +143,7 @@
 
         [self fftPassThrough:numFrames buffer:data];
         [fileReader retrieveFreshAudio:data numFrames:numFrames numChannels:numChannels];
-//      [self fftPitchShift:numFrames buffer:data];
-//      [self fftPitchShift:numFrames buffer:data];
 
-        
         if (![[self stopButton] isEnabled]) {
             
 //            [fileReader stop];
@@ -262,7 +180,6 @@
 	self.fftLog2n = log2f(maxFrames);		// log base2 of max number of frames, eg., 10 for 1024
 	self.fftN = 1 << self.fftLog2n;					// actual max number of frames, eg., 1024 - what a silly way to compute it
     
-    
 	self.fftNOver2 = maxFrames/2;                // half fft size
 	self.fftBufferCapacity = maxFrames;          // yet another way of expressing fft size
 	self.fftIndex = 0;                           // index for reading frame data in callback
@@ -281,7 +198,6 @@
     if( self.fftSetup == (FFTSetup) 0) {
         NSLog(@"Error - unable to allocate FFT setup buffers" );
 	}
-	
 }
 
 
@@ -289,22 +205,19 @@
 #pragma mark -
 #pragma mark fft passthrough function
 
-// called by audio callback function with a slice of sample frames
+// Called by audio callback function with a slice of sample frames
 //
-// note this is nearly identical to the code example in apple developer lib at
+// Adopted from code samples on dev forum @
 // http://developer.apple.com/library/ios/#documentation/Performance/Conceptual/vDSP_Programming_Guide/SampleCode/SampleCode.html%23//apple_ref/doc/uid/TP40005147-CH205-CIAEJIGF
 //
-// this code does a passthrough from mic input to mixer bus using forward and inverse fft
-// it also analyzes frequency with the freq domain data
+// This checks the frequency by doing a forward and inverse fft during passthrough
 //-------------------------------------------------------------
 
 -(OSStatus)fftPassThrough:(UInt32)inNumberFrames
                    buffer:(float*) sampleBuffer{
 	
     // note: the fx control slider does nothing during fft passthrough
-    
     // set all the params
-    
     // scope reference that allows access to everything in MixerHostAudio class
     
     
@@ -392,7 +305,7 @@
         float dominantFrequency = 0;
         int bin = -1;
         for (int i=0; i<n; i+=2) {
-			float curFreq = [self MagnitudeSquared:analysisBuffer[i] withFloat:analysisBuffer[i+1]];
+			float curFreq = [self magnitudeSquared:analysisBuffer[i] withFloat:analysisBuffer[i+1]];
 			if (curFreq > dominantFrequency) {
 				dominantFrequency = curFreq;
 				bin = (i+1)/2;
@@ -459,48 +372,27 @@
 
 -(OSStatus) fftPitchShift:(UInt32) inNumberFrames buffer:(float*)sampleBuffer {      // frames (sample data)
     
-
 	FFTSetup fftSetup = self.fftSetup;      // fft setup structures need to support vdsp functions
-	
     
 //	uint32_t stride = 1;                    // interleaving factor for vdsp functions
 //	int bufferCapacity = self.fftBufferCapacity;    // maximum size of fft buffers
     
-   // float pitchShift = .3;                 // pitch shift factor 1=normal, range is .5->2.0
+    // float pitchShift = .3;                 // pitch shift factor 1=normal, range is .5->2.0
     long osamp = 2;//4                         // oversampling factor
     long fftSize = 1024;                    // fft size
 	float frequency;                        // analysis frequency result
     
-    
-    //	ConvertInt16ToFloat
-    
-//pete    vDSP_vflt16((SInt16 *) sampleBuffer, stride, (float *) analysisBuffer, stride, bufferCapacity );
-    
-    // run the pitch shift
-    
-    // scale the fx control 0->1 to range of pitchShift .5->2.0
-    
-    //pete pitchShift = (self.micFxControl * 1.5) + .5;
-    
-    // osamp should be at least 4, but at this time my ipod touch gets very unhappy with
-    // anything greater than 2
-    
-    
- /*   smb2PitchShift( pitchShift , (long) inNumberFrames,
-                   fftSize,  osamp, (float) self.graphSampleRate,
-                   (float *) analysisBuffer , (float *) outputBuffer,
-                   fftSetup, &frequency);
-    */
-//pete    [self smb2PitchShift:pitchShift numSampsToProcess:(long)inNumberFrames fftFrameSize:fftSize osamp:osamp sampleRate:(float)self.graphSampleRate indata:(float *) analysisBuffer outdata:(float *) outputBuffer fftSetup:fftSetup frequency:&frequency];
-  
-        [self smb2PitchShift:effectPitch numSampsToProcess:(long)inNumberFrames fftFrameSize:fftSize osamp:osamp sampleRate:(float)self.graphSampleRate indata:(float *) sampleBuffer outdata:(float *) sampleBuffer fftSetup:fftSetup frequency:&frequency];
-    
-    // display detected pitch
-    
+    [self smb2PitchShift:effectPitch
+       numSampsToProcess:(long)inNumberFrames
+            fftFrameSize:fftSize
+                   osamp:osamp
+              sampleRate:(float)self.graphSampleRate
+                  indata:(float *) sampleBuffer
+                 outdata:(float *) sampleBuffer
+                fftSetup:fftSetup
+               frequency:&frequency];
+
     NSLog(@"freq: %f", frequency);
-   // self.displayInputFrequency = (int) frequency;
-    // very very cool effect but lets skip it temporarily
- //       THIS.sinFreq = THIS.frequency;   // set synth frequency to the pitch detected by microphone
 
     // now convert from float to Sint16
     
@@ -508,7 +400,6 @@
  //pete   vDSP_vfixr16((float *) sampleBuffer, stride, (SInt16 *) sampleBuffer, stride, bufferCapacity );
 
     return noErr;
-    
 }
 
 
@@ -528,7 +419,6 @@
  Author: (c)1999-2009 Stephan M. Bernsee <smb [AT] dspdimension [DOT] com>
  */
 {
-
 	static float gInFIFO[MAX_FRAME_LENGTH];
 	static float gOutFIFO[MAX_FRAME_LENGTH];
 	static float gFFTworksp[2*MAX_FRAME_LENGTH];
@@ -551,7 +441,6 @@
 	int stride;
 	size_t bufferCapacity;	// In samples
 	int log2n, n, nOver2;		// params for fft setup
-    
 	
 	float maxMag;	// tz maximum magnitude for pitch detection display
 	float displayFreq;	// true pitch from last window analysis
@@ -595,7 +484,6 @@
 		gInit = true;
 	}
 	
-    //	NSLog(@"before load");
 	/* main processing loop */
 	for (i = 0; i < numSampsToProcess; i++){
 		
@@ -628,15 +516,7 @@
 			
 			// i think that the vDSP_ctoz function will accomplish the interleaving and complex formatting stuff below
 			// we would still need to do the windowing, but maybe there's an apple function for that too
-			
-            //			for (k = 0; k < fftFrameSize;k++) {
-            //				window = -.5*cos(2.*M_PI*(double)k/(double)fftFrameSize)+.5;
-            //				gFFTworksp[2*k] = gInFIFO[k] * window;				// real part is winowed amplitude of samples
-            //				gFFTworksp[2*k+1] = 0.;								// imag part is set to 0
-            //				//	NSLog(@"i: %d, k: %d, window: %f", i, k, window );
-            //			}
-            
-			
+
 			for (k = 0; k < fftFrameSize;k++) {
 				window = -.5*cos(2.*M_PI*(double)k/(double)fftFrameSize)+.5;
 				gFFTworksp[k] = gInFIFO[k] * window;				// real part is winowed amplitude of samples
@@ -705,9 +585,7 @@
 				gAnaFreq[k] = tmp;
 			}
 			
-            
             // pitch detection ------------------
-            
             // find max magnitude for this pass
          
             maxMag = 0.0;
@@ -721,8 +599,6 @@
             
 			freqTotal += displayFreq;
 			pitchCount++;
-            
-            
 			
 			/* ***************** PROCESSING ******************* */
 			/* this does the actual pitch shifting */
@@ -730,7 +606,6 @@
 			memset(gSynFreq, 0, fftFrameSize*sizeof(float));	// only actually seem to use half of frame size?
 			
 			// so this code assigns the results of the analysis.
-			
 			// it sets up pitch shifted bins using analyzed magnitude and analyzed freq * pitchShift
 			
 			for (k = 0; k <= fftFrameSize2; k++) {
@@ -769,7 +644,6 @@
 				/* get real and imag part and re-interleave */
 				gFFTworksp[2*k] = magn*cos(phase);
 				gFFTworksp[2*k+1] = magn*sin(phase);
-				
 			}
 			
 			/* zero negative frequencies */
@@ -832,24 +706,7 @@
 		}
 	}
 	
-	
-	// NSLog(@"pitchCount: %d", pitchCount);
-	*frequency = (float) (freqTotal / pitchCount);
-   /*
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        
-        if (maxMag < 6) {
-            [(MainBobbleViewController*)self.delegate setMouth:0];
-        }else if(maxMag < 600){
-            [(MainBobbleViewController*)self.delegate setMouth:1];
-            
-        }else{
-            [(MainBobbleViewController*)self.delegate setMouth:2];
-        }
-            }];
-    */
-    
-  //  if (mouthChangeCount >=5) {
+    *frequency = (float) (freqTotal / pitchCount);
     
     NSLog(@"Max Freq: %f",maxMag);
     
@@ -868,78 +725,11 @@
                 [(MainBobbleViewController*)self.delegate setMouth:5];
             }
         });
-//        mouthChangeCount = 0;
-//    }else{
-//        mouthChangeCount++;
-//    }
-//    
-    
-    
-    /*if (maxMagnitude > 1.2) {
-    if (dominantFrequency < 400) {
-    [(MainBobbleViewController*)self.delegate setMouth:0];
-    }
-    else if (dominantFrequency < 1200){
-    [(MainBobbleViewController*)self.delegate setMouth:1];
-    }else{
-    [(MainBobbleViewController*)self.delegate setMouth:2];
-    }
-    }
-    else{
-    [(MainBobbleViewController*)self.delegate setMouth:0];
-    }
-    */
-
-    
-	//			NSLog(@"pitch is: %f", *frequency );
-    
 }
 
 
 - (IBAction)sliderSlid:(id)sender {
     effectPitch = [(UISlider*)sender value];
-}
-
-void Compare(float *original, float *computed, long length)
-
-{
-    
-    int             i;
-    
-    float           error = original[0] - computed[0];
-    
-    float           max = error;
-    
-    float           min = error;
-    
-    float           mean = 0.0;
-    
-    float           sd_radicand = 0.0;
-    
-    
-    
-    for (i = 0; i < length; i++) {
-        
-        error = original[i] - computed[i];
-        
-        /* printf("%f %f %f\n", original[i], computed[i], error); */
-        
-        max = (max < error) ? error : max;
-        
-        min = (min > error) ? error : min;
-        
-        mean += (error / length);
-        
-        sd_radicand += ((error * error) / (float) length);
-        
-    }
-    
-    
-    
-    NSLog(@"Max error: %f  Min error: %f  Mean: %f  Std Dev: %f\n",
-           
-           max, min, mean, sqrt(sd_radicand));
-    
 }
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -963,13 +753,12 @@ void Compare(float *original, float *computed, long length)
     NSLog(@"Encode Error occurred");
 }
 
+
 // for some calculation in the fft callback
 // check to see if there is a vDsp library version
--(float)MagnitudeSquared:(float)x withFloat:(float)y {
+-(float)magnitudeSquared:(float)x withFloat:(float)y {
 	return ((x*x) + (y*y));
 }
-
-//-(void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -982,10 +771,8 @@ void Compare(float *original, float *computed, long length)
 
 - (void)viewDidUnload
 {
-  //  [self setPitchSlider:nil];
-    [self setTimerLabel:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    [self setTimerLabel:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

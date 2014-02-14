@@ -87,7 +87,6 @@ NSString *adSpaceName = @"INTERSTITIAL_MAIN_VIEW";
 }
 
 
-
 -(void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
@@ -100,31 +99,15 @@ NSString *adSpaceName = @"INTERSTITIAL_MAIN_VIEW";
 
 
 -(void)viewDidAppear:(BOOL)animated{
-
+    [super viewDidAppear:animated];
     [self.loadingIndicator setHidden:YES];
 
-  //  NSString *path = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0];
-    
-/*    NSFileManager* fm = [[NSFileManager alloc] init];
-    NSDirectoryEnumerator* en = [fm enumeratorAtPath:path];
-    NSError* err = nil;
-    BOOL res;
-    
-    NSString* file;
-    while (file = [en nextObject]) {
-        res = [fm removeItemAtPath:[path stringByAppendingPathComponent:file] error:&err];
-        if (!res && err) {
-            NSLog(@"oops: %@", err);
-        }
-    }
-*/
     animationTimer = [NSTimer timerWithTimeInterval:0.04 target:self selector:@selector(animation1) userInfo:nil repeats:YES];
     
     [[NSRunLoop mainRunLoop] addTimer:animationTimer forMode:NSRunLoopCommonModes];
 
     [self resetBobble];
     [super viewDidAppear:animated];
-    
 }
 
 
@@ -150,7 +133,6 @@ interstitial {
     if (interstitial) {
         // Pause app state here
     }
-    
     // Continue ad display
     return YES;
 }
@@ -165,7 +147,6 @@ interstitial {
     
     [self.headImageView setImage:[_headWithMouthImages objectAtIndex:mouthLevel]];
     [self.headImageView setTag:mouthLevel];
-   // [self.mouthImageView setImage:[self mouthAtLevel:mouthLevel]];
 }
 
 - (IBAction)saveBobbleToCameraRoll:(id)sender {
@@ -183,11 +164,6 @@ interstitial {
             [_shareVC.view setFrame:CGRectMake(0, self.view.frame.size.height - self.bottomNavBarView.frame.size.height-_shareVC.view.frame.size.height+2, self.view.frame.size.width, _shareVC.view.frame.size.height)];
         } completion:nil];
     }
-
-    //    [self.loadingIndicator setHidden:NO];
-    //    [animationTimer invalidate];
-    //    frameNumber = 0;
-    //    [self performSelectorInBackground:@selector(saveBobble) withObject:nil];
 }
 
 
@@ -433,24 +409,7 @@ interstitial {
 
 - (void) writeImagesAsMovieToPath:(NSString*)path {
     [self resetBobble];
-//    for (int i = 0; i < 200; i++) {
-//        NSLog(@"%d",_mouthLevels[i]);
-//    }
-//    NSMutableArray *layerRefs = [NSMutableArray arrayWithCapacity:3];
-    
-//    UIGraphicsBeginImageContext(self.view.frame.size);
-    
-//    CGContextRef ctx = UIGraphicsGetCurrentContext();
-//    CGLayerRef layerRef= CGLayerCreateWithContext(ctx,self.backgroundImage.frame.size,NULL);
- //   CGRect rect = CGRectMake(0, 0, self.backgroundImage.frame.size.width, self.backgroundImage.frame.size.height);
-    
-//	CGContextRef layerContext = CGLayerGetContext(layerRef);
-//	CGContextDrawImage(layerContext, rect, ((UIImage*)[_headWithMouthImages objectAtIndex:0]).CGImage);
-    
-    //these were in
-    //UIImage *first = [self applyTransform:[self createNextTransform] fromLayerRef:layerRef andContext:ctx];
-    //first = [self addBackgroundImage:first];
-    
+
     UIImage *first = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:0] layerRef:nil context:nil];
     
     NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0];

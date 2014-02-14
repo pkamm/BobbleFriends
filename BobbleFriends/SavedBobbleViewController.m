@@ -7,41 +7,16 @@
 //
 
 #import "SavedBobbleViewController.h"
+#import "SavedBobbleView.h"
 #import "AppDelegate.h"
-#import <Social/Social.h>
-#import <Accounts/Accounts.h>
+
+#define BOBBLE_BORDER 15
 
 @interface SavedBobbleTableCell ()
 
 @end
 
 @implementation SavedBobbleTableCell
-- (IBAction)shareButtonPressed:(id)sender {
-
-    [APP_DELEGATE setShareController:self.delegate];
-    [APP_DELEGATE setOutputFileName:[self filePath]];
-    
-    NSLog(@"path: %@", [APP_DELEGATE outputFileName]);
-    
-    if (FBSession.activeSession.isOpen){
-        if ([FBSession.activeSession.permissions indexOfObject:@"publish_stream"] != NSNotFound) {
-            [self.delegate selectFriendsButtonAction:sender];
-        }else{
-            [FBSession.activeSession
-             reauthorizeWithPublishPermissions: [NSArray arrayWithObjects:@"publish_stream", nil]
-             defaultAudience:FBSessionDefaultAudienceFriends
-             completionHandler:^(FBSession *session, NSError *error) {
-                 if (!error) {
-                     [self.delegate selectFriendsButtonAction:nil];
-                 }
-             }];
-        }
-    }else{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Please log in to Facebook" message:@"In order to post to Facebook you must first log in." delegate:self.delegate cancelButtonTitle:@"Cancel" otherButtonTitles:@"Log in", nil];
-        [alertView show];
-    }
-    
-}
 
 @end
 
@@ -58,12 +33,6 @@
         // Custom initialization
         
         
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
-        [_dateFormatter setDateFormat:@"MMM dd hh:mm a"];
-        
-        
-        
     }
     return self;
 }
@@ -71,10 +40,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
+    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -96,105 +65,76 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] count];
+    return MAX([[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] count],3);
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    NSString *bobbleId = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] objectAtIndex:indexPath.row];
     SavedBobbleTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-
-	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *mediaDisplayImagePath = [NSString stringWithFormat:@"%@/%@.png",documentsDirectory, bobbleId];
+    cell.backgroundColor = [UIColor clearColor];
     
+    NSInteger bobbleIndex = indexPath.row*2;
     
-    NSFileManager* fm = [NSFileManager defaultManager];
-    NSDictionary* attrs = [fm attributesOfItemAtPath:mediaDisplayImagePath error:nil];
-    
-    if (attrs != nil) {
-        NSDate *date = (NSDate*)[attrs objectForKey: NSFileCreationDate];
-    //    NSLog(@"Date Created: %@", [[date description]);
-        [[cell bobbleTitle] setText:[NSString stringWithFormat:@"Date Created: %@", [date description]]];
-
-    }
-    else {
-        NSLog(@"Not found");
-    }
-    
-    UIImage* image = [UIImage imageWithContentsOfFile:mediaDisplayImagePath];
-    cell.filePath = bobbleId;
-    cell.delegate = self;
-  //  [[cell bobbleTitle] setText:bobbleId];
-    [[cell bobbleImage] setImage:image];
-
+    [self addBobbleToCell:cell atIndex:bobbleIndex];
+    [self addBobbleToCell:cell atIndex:bobbleIndex+1];
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+-(void)addBobbleToCell:(UITableViewCell*)cell atIndex:(NSInteger)index{
+    
+    if ([[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] count] > index) {
+        
+        NSString *bobbleId = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] objectAtIndex:index];
+        
+        NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *mediaDisplayImagePath = [NSString stringWithFormat:@"%@/%@.png",documentsDirectory, bobbleId];
+        
+        NSFileManager* fm = [NSFileManager defaultManager];
+        
+        if ([fm fileExistsAtPath:mediaDisplayImagePath]) {
+            //            NSDictionary* attrs = [fm attributesOfItemAtPath:mediaDisplayImagePath error:nil];
+            
+            SavedBobbleView *bobbleView = [[SavedBobbleView alloc] init];
+            [bobbleView setDelegate:self];
+            [bobbleView.viewBobbleButton setBackgroundImage:[UIImage imageWithContentsOfFile:mediaDisplayImagePath] forState:UIControlStateNormal];
+            
+            [bobbleView setBobbleID:bobbleId];
+            
+            CGRect frame = bobbleView.frame;
+            
+            if (index % 2 == 1) {
+                frame.origin.x = cell.bounds.size.width - frame.size.width - BOBBLE_BORDER;
+            }else{
+                frame.origin.x = BOBBLE_BORDER;
+            }
+            
+            [bobbleView setFrame:frame];
+            [cell addSubview:bobbleView];
+        }
+    }
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
-
-    NSURL *movPath = [NSURL fileURLWithPath:[[documents stringByAppendingPathComponent:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] objectAtIndex:indexPath.row]] stringByAppendingString:@".mov"]];
     
- //   if ( [[NSFileManager defaultManager] isReadableFileAtPath:movPath] ){
-
-    self.player = [[MPMoviePlayerViewController alloc] initWithContentURL:movPath];
-    
-    [self presentMoviePlayerViewControllerAnimated:self.player];
- //   }
-    //[[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] objectAtIndex:indexPath.row]]];
-    //[self.player prepareToPlay];
-   // [self.player.view setFrame: self.view.bounds];  // player's frame must match parent's
-   // [self.view addSubview: self.player.view];
-   // [self.player play];
 }
 - (IBAction)backButtonPushed:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+- (void)viewDidUnload {
+    [self setSavedBobbleTableView:nil];
+    [super viewDidUnload];
+}
+
 
 -(void)uploadiOS5Plus:(id<FBGraphUser>)user{
     UIActivityIndicatorView *newInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -277,8 +217,24 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)viewDidUnload {
-    [self setSavedBobbleTableView:nil];
-    [super viewDidUnload];
+-(void)playBobbleMovie:(NSString*)bobbleID{
+    
+    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
+    
+    NSURL *movPath = [NSURL fileURLWithPath:[[documents stringByAppendingPathComponent:bobbleID] stringByAppendingString:@".mov"]];
+    
+    //   if ( [[NSFileManager defaultManager] isReadableFileAtPath:movPath] ){
+    
+    self.player = [[MPMoviePlayerViewController alloc] initWithContentURL:movPath];
+    
+    [self presentMoviePlayerViewControllerAnimated:self.player];
+    //   }
+    //[[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"bobbleArray"] objectAtIndex:indexPath.row]]];
+    //[self.player prepareToPlay];
+    // [self.player.view setFrame: self.view.bounds];  // player's frame must match parent's
+    // [self.view addSubview: self.player.view];
+    // [self.player play];
 }
+
+
 @end

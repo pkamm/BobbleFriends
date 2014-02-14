@@ -48,7 +48,7 @@
 
 
 -(void)viewDidAppear:(BOOL)animated{
-    
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
@@ -91,9 +91,6 @@
 
 -(void)enableShare{
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//        [self.loadingIndicator setHidesWhenStopped:YES];
-//        [self.loadingIndicator stopAnimating];
-//        [self.loadingIndicator setHidden:YES];
         [self.shareEmailButton setEnabled:YES];
         [self.shareFBButton setEnabled:YES];
         [self.shareTextButton setEnabled:YES];
@@ -285,8 +282,13 @@
     [tempMailCompose addAttachmentData:vidData typeIdentifier:(NSString*)kUTTypeMovie filename:@"BobbleFriend.mov"];
     [self.delegate presentViewController:tempMailCompose animated:YES
                               completion:^{
-                                  
                               }];
+}
+
+-(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 - (IBAction)emailSharebuttonPressed:(id)sender {
     [self displayComposerSheet:@"Send ya bobble"];

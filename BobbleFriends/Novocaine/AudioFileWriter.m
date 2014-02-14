@@ -78,10 +78,8 @@ static pthread_mutex_t outputAudioFileLock;
     self = [super init];
     if (self)
     {
-        
         // Zero-out our timer, so we know we're not using our callback yet
         self.callbackTimer = nil;
-        
         
         // Open a reference to the audio file
         self.audioFileURL = urlToAudioFile;
@@ -91,16 +89,13 @@ static pthread_mutex_t outputAudioFileLock;
         
         CheckError(ExtAudioFileCreateWithURL(audioFileRef, kAudioFileM4AType, &outputFileDesc, NULL, kAudioFileFlags_EraseFile, &_outputFile), "Creating file");
         
-        
         // Set a few defaults and presets
         self.samplingRate = thisSamplingRate;
         self.numChannels = thisNumChannels;
         self.currentTime = 0.0;
         self.latency = .011609977; // 512 samples / ( 44100 samples / sec ) default
         
-        
-        // We're going to impose a format upon the input file
-        // Single-channel float does the trick.
+        // Single ch float format
         _outputFormat.mSampleRate = self.samplingRate;
         _outputFormat.mFormatID = kAudioFormatLinearPCM;
         _outputFormat.mFormatFlags = kAudioFormatFlagIsFloat;
@@ -112,7 +107,6 @@ static pthread_mutex_t outputAudioFileLock;
         
         // Apply the format to our file
         ExtAudioFileSetProperty(_outputFile, kExtAudioFileProperty_ClientDataFormat, sizeof(AudioStreamBasicDescription), &_outputFormat);
-        
         
         // Arbitrary buffer sizes that don't matter so much as long as they're "big enough"
         self.outputBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
@@ -152,13 +146,11 @@ static pthread_mutex_t outputAudioFileLock;
     SInt64 frameOffset = 0;
     ExtAudioFileTell(self.outputFile, &frameOffset);
     self.currentTime = (float)frameOffset / self.samplingRate;
-    
 }
 
-
+// Calculate duration of the audio file
 - (float)getDuration
 {
-    // We're going to directly calculate the duration of the audio file (in seconds)
     SInt64 framesInThisFile;
     UInt32 propertySize = sizeof(framesInThisFile);
     ExtAudioFileGetProperty(self.outputFile, kExtAudioFileProperty_FileLengthFrames, &propertySize, &framesInThisFile);
@@ -168,46 +160,34 @@ static pthread_mutex_t outputAudioFileLock;
     ExtAudioFileGetProperty(self.outputFile, kExtAudioFileProperty_FileDataFormat, &propertySize, &fileStreamFormat);
     
     return (float)framesInThisFile/(float)fileStreamFormat.mSampleRate;
-    
 }
-
-
 
 - (void)configureWriterCallback
 {
-    
-    if (!self.callbackTimer)
-    {
+    if (!self.callbackTimer){
         self.callbackTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
     }
-    
-    if (self.callbackTimer)
-    {
+    if (self.callbackTimer){
+        
         UInt32 numSamplesPerCallback = (UInt32)( self.latency * self.samplingRate );
         dispatch_source_set_timer(self.callbackTimer, dispatch_walltime(NULL, 0), self.latency*NSEC_PER_SEC, 0);
         dispatch_source_set_event_handler(self.callbackTimer, ^{
-            
-            
+
             if (self.writerBlock) {                
                 // Call out with the audio that we've got.
                 self.writerBlock(self.outputBuffer, numSamplesPerCallback, self.numChannels);
                 
                 // Get audio from the block supplier
                 [self writeNewAudio:self.outputBuffer numFrames:numSamplesPerCallback numChannels:self.numChannels];
-                
             }
-            
         });
-        
     }
-    
 }
 
 
 
 - (void)record;
 {
-    
     // Configure (or if necessary, create and start) the timer for retrieving MP3 audio
     [self configureWriterCallback];
     
@@ -216,12 +196,10 @@ static pthread_mutex_t outputAudioFileLock;
         dispatch_resume(self.callbackTimer);
         self.recording = TRUE;
     }
-    
 }
 
 - (void)stop
 {
-    // Close the
     pthread_mutex_lock( &outputAudioFileLock );
     ExtAudioFileDispose(self.outputFile);
     pthread_mutex_unlock( &outputAudioFileLock );

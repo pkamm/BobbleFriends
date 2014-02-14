@@ -56,6 +56,8 @@
 		887BB1941608123100BECC65 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 887BB1931608123100BECC65 /* AVFoundation.framework */; };
 		88899BC7161D1D43004583BE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 88899BC6161D1D43004583BE /* libz.dylib */; };
 		888B9203160803A200A3724F /* MainBobbleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888B9202160803A100A3724F /* MainBobbleViewController.m */; };
+		889B6CA718AD840E00E18F66 /* SavedBobbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 889B6CA618AD840E00E18F66 /* SavedBobbleView.m */; };
+		889B6CA918AD849700E18F66 /* SavedBobbleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 889B6CA818AD849700E18F66 /* SavedBobbleView.xib */; };
 		88B57F6616E5869F00A46CC6 /* app_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88B57F6516E5869F00A46CC6 /* app_icon@2x.png */; };
 		88BC280115AD01910049B353 /* IntroPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BC280015AD01910049B353 /* IntroPageViewController.m */; };
 		88C44E0615CEDAA30004C5FF /* TouchImageView_Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C44E0515CEDAA30004C5FF /* TouchImageView_Private.m */; };
@@ -328,6 +330,9 @@
 		88899BC6161D1D43004583BE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		888B9201160803A100A3724F /* MainBobbleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainBobbleViewController.h; sourceTree = "<group>"; };
 		888B9202160803A100A3724F /* MainBobbleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainBobbleViewController.m; sourceTree = "<group>"; };
+		889B6CA518AD840E00E18F66 /* SavedBobbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedBobbleView.h; sourceTree = "<group>"; };
+		889B6CA618AD840E00E18F66 /* SavedBobbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedBobbleView.m; sourceTree = "<group>"; };
+		889B6CA818AD849700E18F66 /* SavedBobbleView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SavedBobbleView.xib; sourceTree = "<group>"; };
 		88B57F6516E5869F00A46CC6 /* app_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app_icon@2x.png"; sourceTree = "<group>"; };
 		88BC27FF15AD01910049B353 /* IntroPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroPageViewController.h; sourceTree = "<group>"; };
 		88BC280015AD01910049B353 /* IntroPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroPageViewController.m; sourceTree = "<group>"; };
@@ -947,13 +952,16 @@
 				88CBED1118350636006FD106 /* ShareViewController.xib */,
 				885DFE7116D2DEB1003FEE7E /* pitchShift.mm */,
 				885DFE7416D2E1DA003FEE7E /* pitchShift.h */,
+				88CBECFF183137FD006FD106 /* CopOverlayViewController.h */,
+				88CBED00183137FD006FD106 /* CopOverlayViewController.m */,
+				88CBED01183137FD006FD106 /* CopOverlayViewController.xib */,
 				8842183716DEE5FE00377055 /* ChooseMouthViewController.h */,
 				8842183816DEE5FE00377055 /* ChooseMouthViewController.m */,
 				88DCB5CF175D7A77009D7119 /* SavedBobbleViewController.h */,
 				88DCB5D0175D7A77009D7119 /* SavedBobbleViewController.m */,
-				88CBECFF183137FD006FD106 /* CopOverlayViewController.h */,
-				88CBED00183137FD006FD106 /* CopOverlayViewController.m */,
-				88CBED01183137FD006FD106 /* CopOverlayViewController.xib */,
+				889B6CA518AD840E00E18F66 /* SavedBobbleView.h */,
+				889B6CA618AD840E00E18F66 /* SavedBobbleView.m */,
+				889B6CA818AD849700E18F66 /* SavedBobbleView.xib */,
 				884BF840181611B1003E45F2 /* Images */,
 			);
 			path = BobbleFriends;
@@ -1081,6 +1089,7 @@
 				88CBECC21831332D006FD106 /* btn_create_new_off@2x.png in Resources */,
 				88CBECC01831332D006FD106 /* btn_choose_photo_off@2x.png in Resources */,
 				88686BD7183935BD000C502B /* mouth_male_02@2x.png in Resources */,
+				889B6CA918AD849700E18F66 /* SavedBobbleView.xib in Resources */,
 				88CBEC441831332D006FD106 /* bobble_female_surfer_dark.png in Resources */,
 				88CBEC5F1831332D006FD106 /* btn_ok_off.png in Resources */,
 				88CBECCF1831332D006FD106 /* btn_play_btn_off@2x.png in Resources */,
@@ -1265,6 +1274,7 @@
 				882C65D31681640E00E1A779 /* Background.m in Sources */,
 				88CDF7C3169A591200D818CB /* ChooseBodyViewController.m in Sources */,
 				88CDF7C7169A596B00D818CB /* Body.m in Sources */,
+				889B6CA718AD840E00E18F66 /* SavedBobbleView.m in Sources */,
 				88CDF7CB169A639F00D818CB /* SpeedModulationViewController.m in Sources */,
 				8821863916A4FCAA005ED9C3 /* ShareViewController.m in Sources */,
 				88CBED02183137FD006FD106 /* CopOverlayViewController.m in Sources */,

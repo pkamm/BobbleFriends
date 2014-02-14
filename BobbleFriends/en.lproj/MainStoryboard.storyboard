@@ -106,6 +106,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frame_view_saved.png" id="j5V-aK-lKU">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <view contentMode="scaleToFill" id="e6Q-sH-yrZ" userLabel="navBarImageView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -142,47 +146,36 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="150" sectionHeaderHeight="22" sectionFooterHeight="22" id="s6s-Fr-WUZ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="192" sectionHeaderHeight="22" sectionFooterHeight="22" id="s6s-Fr-WUZ">
                                 <rect key="frame" x="0.0" y="34" width="320" height="534"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="Cell" rowHeight="150" id="PLh-Gx-Vcs" customClass="SavedBobbleTableCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="150"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" shouldIndentWhileEditing="NO" reuseIdentifier="Cell" rowHeight="192" id="PLh-Gx-Vcs" customClass="SavedBobbleTableCell">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="192"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PLh-Gx-Vcs" id="M8e-zg-Tqh">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="149"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="192"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="5" id="2O4-ik-hX2">
-                                                    <rect key="frame" x="141" y="8" width="162" height="24"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="oMj-l2-5VL">
-                                                    <rect key="frame" x="20" y="8" width="113" height="134"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background.png" id="iMX-OK-VeA">
+                                                    <rect key="frame" x="15" y="0.0" width="291" height="192"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="view_saved_inside_shelf.png" id="Yhz-sC-Vcs">
+                                                    <rect key="frame" x="14" y="0.0" width="22" height="192"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5Mw-vd-DtD">
-                                                    <rect key="frame" x="169" y="77" width="106" height="39"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="view_saved_inside_shelf.png" id="4nM-X7-t3G">
+                                                    <rect key="frame" x="284" y="0.0" width="22" height="192"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                                    <state key="normal" title="Share">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="shareButtonPressed:" destination="PLh-Gx-Vcs" eventType="touchUpInside" id="7XE-Is-HIz"/>
-                                                    </connections>
-                                                </button>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="view_saved_shelf.png" id="opp-Lp-FSG">
+                                                    <rect key="frame" x="0.0" y="167" width="320" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="BobbleTitle" destination="2O4-ik-hX2" id="zta-Ge-3ED"/>
-                                            <outlet property="bobbleImage" destination="oMj-l2-5VL" id="3lo-Jk-SSJ"/>
-                                            <outlet property="bobbleTitle" destination="2O4-ik-hX2" id="7zm-8h-r8I"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -858,10 +851,13 @@
         <image name="btn_wardrobe_on.png" width="58" height="44"/>
         <image name="face_outline_t.png" width="202" height="285"/>
         <image name="frame.png" width="640" height="1136"/>
+        <image name="frame_view_saved.png" width="320" height="569"/>
         <image name="get_started.png" width="269" height="309"/>
         <image name="option_tab_mouth.png" width="269" height="42"/>
         <image name="photo_instructions.png" width="270" height="362"/>
         <image name="top_bar.png" width="320" height="37"/>
+        <image name="view_saved_inside_shelf.png" width="23" height="480"/>
+        <image name="view_saved_shelf.png" width="290" height="38"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
