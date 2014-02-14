@@ -286,7 +286,7 @@
 }
 
 -(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self.delegate dismissViewControllerAnimated:YES completion:^{
         
     }];
 }
