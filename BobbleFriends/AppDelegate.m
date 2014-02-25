@@ -35,6 +35,8 @@ NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblef
     [Flurry startSession:@"NXYM7TZFYTR9RTHHQCKC"];
     [FlurryAds initialize:window.rootViewController];
     [Flurry logEvent:@"OPEN_APP_FRESH"];
+//    [Flurry setDebugLogEnabled:YES];
+//    [FlurryAds enableTestAds:YES];
 
     // Override point for customization after application launch.
     @try {

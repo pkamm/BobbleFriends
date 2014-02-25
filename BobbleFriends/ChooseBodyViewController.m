@@ -47,7 +47,12 @@
     //[FlurryAds fetchAdForSpace:@”INTERSTITIAL_MAIN_VC” frame:self.view.frame size:FULLSCREEN];
 
 }
-
+-(void)viewWillDisappear:(BOOL)animated{
+    // Remove Banner Ads and reset delegate
+    [FlurryAds removeAdFromSpace:@"BANNER_MAIN_VC"];
+    [FlurryAds setAdDelegate:nil];
+    [super viewWillDisappear:animated];
+}
 /*
  * Itisrecommendedtopauseappactivitieswhenaninterstitialisshown. * Listentoshoulddisplaydelegate.
  */

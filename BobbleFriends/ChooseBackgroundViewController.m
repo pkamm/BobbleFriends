@@ -47,10 +47,10 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
     // Remove Banner Ads and reset delegate
     [FlurryAds removeAdFromSpace:@"BANNER_MAIN_VC"];
     [FlurryAds setAdDelegate:nil];
+    [super viewWillDisappear:animated];
 }
 
 /*
