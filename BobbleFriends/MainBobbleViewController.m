@@ -134,7 +134,11 @@ interstitial {
         // Pause app state here
     }
     // Continue ad display
-    return YES;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.blankworldwide.bobbleFriends.purchase"]) {
+        return YES;
+    }else{
+        return NO;
+    }
 }
 
 - (void)spaceDidDismiss:(NSString *)adSpace interstitial:(BOOL)interstitial {

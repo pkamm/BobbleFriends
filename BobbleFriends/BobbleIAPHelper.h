@@ -10,4 +10,6 @@
 
 @interface BobbleIAPHelper : IAPHelper
 
++ (BobbleIAPHelper*) sharedInstance;
+
 @end

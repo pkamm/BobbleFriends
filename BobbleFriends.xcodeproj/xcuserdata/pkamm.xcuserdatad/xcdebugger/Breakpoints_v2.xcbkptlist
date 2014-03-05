@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/AppDelegate.m"
-            timestampString = "415024301.989801"
+            timestampString = "415712377.906322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "242"
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "414068481.774885"
+            timestampString = "415716470.358534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "563"
-            endingLineNumber = "563"
+            startingLineNumber = "567"
+            endingLineNumber = "567"
             landmarkName = "-addSoundToVideo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,7 +154,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/AppDelegate.m"
-            timestampString = "415024301.989801"
+            timestampString = "415712377.906322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "264"
@@ -170,7 +170,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/AppDelegate.m"
-            timestampString = "415024301.989801"
+            timestampString = "415712377.906322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "245"
@@ -217,28 +217,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BobbleFriends/ChooseBackgroundViewController.m"
-            timestampString = "415024301.989801"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
-            landmarkName = "-backButtonPressed:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "414068481.774885"
+            timestampString = "415716470.358534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
             landmarkName = "-setMouth:"
             landmarkType = "5">
          </BreakpointContent>
@@ -324,11 +308,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "414068481.774885"
+            timestampString = "415716470.358534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "356"
-            endingLineNumber = "356"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
             landmarkName = "-createBobbleFrame:layerRef:context:"
             landmarkType = "5">
             <Locations>
@@ -370,44 +354,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "414068481.774885"
+            timestampString = "415716470.358534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
             landmarkName = "-createBobbleFrame:layerRef:context:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BobbleFriends/ChooseBackgroundViewController.m"
-            timestampString = "415024301.989801"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "-spaceShouldDisplay:interstitial:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BobbleFriends/ChooseBackgroundViewController.m"
-            timestampString = "415024301.989801"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -433,7 +385,7 @@
                   symbolName = "-[ShareViewController displayComposerSheet:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ShareViewController.m"
-                  timestampString = "415023704.622308"
+                  timestampString = "415717107.147814"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "307"
@@ -447,7 +399,7 @@
                   symbolName = "-[ShareViewController displayComposerSheet:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ShareViewController.m"
-                  timestampString = "415023704.622535"
+                  timestampString = "415717107.147985"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "307"
@@ -479,7 +431,7 @@
                   symbolName = "-[CopOverlayViewController dontShowAgainButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/CopOverlayViewController.m"
-                  timestampString = "415023704.622719"
+                  timestampString = "415717107.148126"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "42"
@@ -493,7 +445,7 @@
                   symbolName = "-[CopOverlayViewController dontShowAgainButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/CopOverlayViewController.m"
-                  timestampString = "415023704.622971"
+                  timestampString = "415717107.148257"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "42"
@@ -507,7 +459,7 @@
                   symbolName = "-[CopOverlayViewController dontShowAgainButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/CopOverlayViewController.m"
-                  timestampString = "415023704.62317"
+                  timestampString = "415717107.148402"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "42"
@@ -521,58 +473,12 @@
                   symbolName = "-[CopOverlayViewController dontShowAgainButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/CopOverlayViewController.m"
-                  timestampString = "415023704.623487"
+                  timestampString = "415717107.148536"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "42"
                   endingLineNumber = "42"
                   offsetFromSymbolStart = "514">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BobbleFriends/FaceCroppingViewController.m"
-            timestampString = "412778584.748377"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "-viewDidAppear:"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[FaceCroppingViewController viewDidAppear:]"
-                  moduleName = "BobbleFriends"
-                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/FaceCroppingViewController.m"
-                  timestampString = "415023704.623868"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "52"
-                  endingLineNumber = "52"
-                  offsetFromSymbolStart = "1522">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[FaceCroppingViewController viewDidAppear:]"
-                  moduleName = "BobbleFriends"
-                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/FaceCroppingViewController.m"
-                  timestampString = "415023704.624107"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "52"
-                  endingLineNumber = "52"
-                  offsetFromSymbolStart = "2178">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -599,7 +505,7 @@
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.624274"
+                  timestampString = "415717107.148686"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -613,7 +519,7 @@
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.624505"
+                  timestampString = "415717107.148819"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -627,7 +533,7 @@
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.624798"
+                  timestampString = "415717107.148951"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -659,7 +565,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.62499"
+                  timestampString = "415717107.14911"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -673,7 +579,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.625235"
+                  timestampString = "415717107.149242"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -687,7 +593,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.625471"
+                  timestampString = "415717107.149376"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -701,7 +607,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "415023704.625801"
+                  timestampString = "415717107.149508"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -709,6 +615,172 @@
                   offsetFromSymbolStart = "1884">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BobbleFriends/ChooseBackgroundViewController.m"
+            timestampString = "415716470.358534"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "-addPurchaseLock:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BobbleFriends/ChooseBackgroundViewController.m"
+            timestampString = "415716470.358534"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "-makePurchase:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChooseBackgroundViewController makePurchase:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ChooseBackgroundViewController.m"
+                  timestampString = "415714734.170387"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "143"
+                  endingLineNumber = "143"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChooseBackgroundViewController makePurchase:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ChooseBackgroundViewController.m"
+                  timestampString = "415714734.170515"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "143"
+                  endingLineNumber = "143"
+                  offsetFromSymbolStart = "244">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[ChooseBackgroundViewController makePurchase:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ChooseBackgroundViewController.m"
+                  timestampString = "415714734.170657"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "143"
+                  endingLineNumber = "143"
+                  offsetFromSymbolStart = "282">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BobbleFriends/IAPHelper.m"
+            timestampString = "415716511.577253"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "-productsRequest:didReceiveResponse:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[IAPHelper productsRequest:didReceiveResponse:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/IAPHelper.m"
+                  timestampString = "415717107.149664"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "86">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[IAPHelper productsRequest:didReceiveResponse:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/IAPHelper.m"
+                  timestampString = "415717107.149795"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "836">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[IAPHelper productsRequest:didReceiveResponse:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/IAPHelper.m"
+                  timestampString = "415717107.149925"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "922">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[IAPHelper productsRequest:didReceiveResponse:]"
+                  moduleName = "BobbleFriends"
+                  urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/IAPHelper.m"
+                  timestampString = "415717107.150038"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "1008">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BobbleFriends/IAPHelper.m"
+            timestampString = "415716648.162141"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "-initWithProductIdentifiers:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

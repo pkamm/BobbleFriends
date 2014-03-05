@@ -12,6 +12,7 @@
 #import "Body.h"
 #import "Flurry.h"
 #import "FlurryAds.h"
+#import "BobbleIAPHelper.h"
 
 NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblefriends.Login:FBSessionStateChangedNotification";
 #define TESTING 1
@@ -23,7 +24,8 @@ NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblef
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
+    [BobbleIAPHelper sharedInstance];
+
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 #ifdef TESTING
  //   [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
@@ -35,8 +37,6 @@ NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblef
     [Flurry startSession:@"NXYM7TZFYTR9RTHHQCKC"];
     [FlurryAds initialize:window.rootViewController];
     [Flurry logEvent:@"OPEN_APP_FRESH"];
-//    [Flurry setDebugLogEnabled:YES];
-//    [FlurryAds enableTestAds:YES];
 
     // Override point for customization after application launch.
     @try {

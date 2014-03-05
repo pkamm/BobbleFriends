@@ -1,0 +1,10 @@
+PODS:
+  - TestFlightSDK (3.0.0)
+
+DEPENDENCIES:
+  - TestFlightSDK (~> 3.0)
+
+SPEC CHECKSUMS:
+  TestFlightSDK: 71e3e78d3a46144dbad975a4bf80a14dae6a818a
+
+COCOAPODS: 0.29.0

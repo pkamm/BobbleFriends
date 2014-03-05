@@ -10,4 +10,16 @@
 
 @implementation BobbleIAPHelper
 
++ (BobbleIAPHelper *)sharedInstance {
+    static dispatch_once_t once;
+    static BobbleIAPHelper * sharedInstance;
+    dispatch_once(&once, ^{
+        NSSet * productIdentifiers = [NSSet setWithObjects:
+                                      @"com.blankworldwide.bobbleFriends.purchase",
+                                      nil];
+        sharedInstance = [[self alloc] initWithProductIdentifiers:productIdentifiers];
+    });
+    return sharedInstance;
+}
+
 @end

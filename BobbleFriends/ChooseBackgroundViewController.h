@@ -13,5 +13,6 @@
 
 -(void)addBackgroundIndex:(int)bgIndex secondInCell:(BOOL)isSecond toCell:(UITableViewCell*)cell;
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

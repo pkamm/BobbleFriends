@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B2316680-A5AF-4E9F-A73F-2C26C4131D73</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BobbleFriends</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>ED7CF59E-51E9-45CB-ADC0-8A761CE78549</key>
+		<string>https://github.com/pkamm/BobbleFriends.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BobbleFriends.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>ED7CF59E-51E9-45CB-ADC0-8A761CE78549</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/pkamm/BobbleFriends.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>ED7CF59E-51E9-45CB-ADC0-8A761CE78549</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>ED7CF59E-51E9-45CB-ADC0-8A761CE78549</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BobbleFriends</string>
+		</dict>
+	</array>
+</dict>
+</plist>
