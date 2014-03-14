@@ -10,17 +10,57 @@
 #import "AppDelegate.h"
 #import "MainBobbleViewController.h"
 
+#import "EAFRead.h"
+#import "EAFWrite.h"
+#import "Utilities.h"
+
+#include "Dirac.h"
+#include <stdio.h>
+#include <sys/time.h>
+
 #define MAX_FRAME_LENGTH 4096
+
+double gExecTimeTotal = 0.;
 
 @interface AudioRecorderViewController ()
 
 @end
+
+/*
+ This is the callback function that supplies data from the input stream/file whenever needed.
+ It should be implemented in your software by a routine that gets data from the input/buffers.
+ The read requests are *always* consecutive, ie. the routine will never have to supply data out
+ of order.
+ */
+long myReadData(float **chdata, long numFrames, void *userData)
+{
+	// The userData parameter can be used to pass information about the caller (for example, "self") to
+	// the callback so it can manage its audio streams.
+	if (!chdata)	return 0;
+	
+	AudioRecorderViewController *Self = (AudioRecorderViewController*)userData;
+	if (!Self)	return 0;
+	
+	// we want to exclude the time it takes to read in the data from disk or memory, so we stop the clock until
+	// we've read in the requested amount of data
+	gExecTimeTotal += DiracClockTimeSeconds(); 		// ............................. stop timer ..........................................
+    
+	OSStatus err = [Self.reader readFloatsConsecutive:numFrames intoArray:chdata];
+	
+	DiracStartClock();								// ............................. start timer ..........................................
+    
+	return err;
+	
+}
 
 @implementation AudioRecorderViewController
 
 @synthesize playButton, stopButton, recordButton;
 
 - (void)viewDidLoad {
+    isPlaying = NO;
+    _mouthFrame = 0;
+    self.mouthLevels = [[NSMutableArray alloc] init];
     
     [super viewDidLoad];
 
@@ -31,10 +71,14 @@
 
     effectPitch = 1;
     mouthChangeCount = 0;
+    
+    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
+    self.originalSoundFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/audio.aif"]];
+    self.shiftedSoundFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/shifted.aif"]];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    ringBuffer = new RingBuffer(32768, 2);
+//    ringBuffer = new RingBuffer(32768, 2);
     audioManager = [Novocaine audioManager];
     [self FFTSetup];
     _timerDuration = -1;
@@ -43,6 +87,7 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     [APP_DELEGATE setSoundPitchValue:effectPitch];
+    [self createNewAudioFileWithPitch:effectPitch];
 }
 
 -(void)increaseTimer:(NSTimer*)timer{
@@ -72,34 +117,41 @@
     _timerDuration = -1;
     _recordTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(increaseTimer:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_recordTimer forMode:NSRunLoopCommonModes];
+    float interval =(1.f/FRAMES_PER_SEC);
     
-    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
-    NSURL *outputFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/audio.m4a"]];
-
-    NSLog(@"audio output URL: %@", outputFileURL);
+    NSLog(@"interval: %f",interval);
+    self.mouthTimer = [NSTimer timerWithTimeInterval:interval target:self selector:@selector(switchMouth) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.mouthTimer forMode:NSRunLoopCommonModes];
+    
+    NSLog(@"audio output URL: %@", self.originalSoundFileURL);
     
     NSError* err = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:[outputFileURL absoluteString] error:&err];
+    [[NSFileManager defaultManager] removeItemAtPath:[self.originalSoundFileURL absoluteString] error:&err];
     
     fileWriter = [[AudioFileWriter alloc]
-                  initWithAudioFileURL:outputFileURL
+                  initWithAudioFileURL:self.originalSoundFileURL
                   samplingRate:audioManager.samplingRate
                   numChannels:audioManager.numInputChannels];
     
     audioManager.inputBlock = ^(float *data, UInt32 numFrames, UInt32 numChannels) {
 
-        //Shift pitch on record for export to movie
-        [self fftPitchShift:numFrames buffer:data];
-        
-        [fileWriter writeNewAudio:data numFrames:numFrames numChannels:numChannels];
 
+        [fileWriter writeNewAudio:data numFrames:numFrames numChannels:numChannels];
+        
+        [self fftPassThrough:numFrames buffer:data];
+        
         if (![[self stopButton] isEnabled]) {
             audioManager.inputBlock = nil;
             [fileWriter release];
             NSLog(@"Done recording");
+            [self createNewAudioFileWithPitch:1];
+            [self.mouthTimer invalidate];
         }
     };
+    [audioManager play];
 }
+
+
 
 - (IBAction)stopAudioPressed:(id)sender{
     [self.stopButton setEnabled:NO];
@@ -108,6 +160,14 @@
     _timerDuration = _timerCounter;
     [_recordTimer invalidate];
     _recordTimer = nil;
+//    [self createNewAudioFileWithPitch:1];
+}
+
+-(void)diracPlayerDidFinishPlaying:(DiracAudioPlayerBase*)player successfully:(BOOL)flag{
+    recordButton.enabled = YES;
+    stopButton.enabled = NO;
+    isPlaying = NO;
+    [self.mouthTimer invalidate];
 }
 
 - (IBAction)playAudioPressed:(id)sender{
@@ -116,42 +176,29 @@
     [self.recordButton setEnabled:NO];
     [self.playButton setEnabled:NO];
     _timerCounter = 0;
+    _mouthFrame = 0;
     _recordTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(increaseTimer:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_recordTimer forMode:NSRunLoopCommonModes];
+    float interval =(1.f/FRAMES_PER_SEC);
 
-    // Point to Document directory
-    NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
-    // Write out the contents of home directory to console
-    NSError *error;
-
-    NSLog(@"Documents directory: %@", [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documents error:&error]);
+    self.mouthTimer = [NSTimer timerWithTimeInterval:interval target:self selector:@selector(switchMouth) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.mouthTimer forMode:NSRunLoopCommonModes];
     
+	NSError *error = nil;
+	mDiracAudioPlayer = [[DiracFxAudioPlayer alloc] initWithContentsOfURL:self.originalSoundFileURL channels:1 error:&error];		// LE only supports 1 channel!
+	[mDiracAudioPlayer setDelegate:self];
+	[mDiracAudioPlayer setNumberOfLoops:0];
+    
+    float pitch     = powf(2.f, (int)effectPitch / 12.f);     // pitch shift (0 semitones)
+    [mDiracAudioPlayer changePitch:pitch];
+    [mDiracAudioPlayer setVolume:1];
+    [mDiracAudioPlayer setMVolume:1];
+    UInt32 doChangeDefaultRoute = true;
+    AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryDefaultToSpeaker, sizeof(doChangeDefaultRoute), &doChangeDefaultRoute);
     UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
     AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,sizeof (audioRouteOverride),&audioRouteOverride);
-
-    NSURL *inputFileURL = [NSURL URLWithString:[documents stringByAppendingString:@"/audio.m4a"]];
-    NSLog(@"audio input URL: %@", inputFileURL);
-    
-   fileReader = [[AudioFileReader alloc]
-                  initWithAudioFileURL:inputFileURL
-                  samplingRate:audioManager.samplingRate
-                  numChannels:audioManager.numOutputChannels];
-    
-    [fileReader play];
-    fileReader.currentTime = 0.0;
-    [audioManager setOutputBlock:^(float *data, UInt32 numFrames, UInt32 numChannels){
-
-        [self fftPassThrough:numFrames buffer:data];
-        [fileReader retrieveFreshAudio:data numFrames:numFrames numChannels:numChannels];
-
-        if (![[self stopButton] isEnabled]) {
-            
-//            [fileReader stop];
-            audioManager.outputBlock = nil;
-            [fileReader release];
-            NSLog(@"Done playing audio");
-        }
-     }];
+    isPlaying = YES;
+    [mDiracAudioPlayer play];
 }
 
 
@@ -159,14 +206,7 @@
 // Setup FFT - structures needed by vdsp functions
 //
 - (void) FFTSetup {
-	
-	// I'm going to just convert everything to 1024
-	
-	// on the simulator the callback gets 512 frames even if you set the buffer to 1024, so this is a temp workaround in our efforts
-	// to make the fft buffer = the callback buffer,
-	
-	// for smb it doesn't matter if frame size is bigger than callback buffer
-	
+
 	UInt32 maxFrames = 1024;    // fft size
 	
 	// setup input and output buffers to equal max frame size
@@ -215,12 +255,7 @@
 
 -(OSStatus)fftPassThrough:(UInt32)inNumberFrames
                    buffer:(float*) sampleBuffer{
-	
-    // note: the fx control slider does nothing during fft passthrough
-    // set all the params
-    // scope reference that allows access to everything in MixerHostAudio class
-    
-    
+
     COMPLEX_SPLIT A = self.fftA;                // complex buffers
 	
 //	void *dataBuffer = self.dataBuffer;         // working sample buffers
@@ -240,51 +275,19 @@
 	int bufferCapacity = self.fftBufferCapacity;
 	SInt16 index = self.fftIndex;
 
-	// this next logic assumes that the bufferCapacity determined by maxFrames in the fft-setup is less than or equal to
-	// the inNumberFrames (which should be determined by the av session IO buffer size (ie duration)
-	//
-	// If we can guarantee the fft buffer size is equal to the inNumberFrames, then this buffer filling step is unecessary
-	//
-	// at this point i think its essential to make the two buffers equal size in order to do the fft passthrough without doing
-	// the overlapping buffer thing
-	//
-	
-    
-	// Fill the buffer with our sampled data. If we fill our buffer, run the
-	// fft.
-	
-	// so I have a question - the fft buffer  needs to be an even multiple of the frame (packet size?) or what?
     int read = bufferCapacity - index;
 	if (read > inNumberFrames) {
         
 		memcpy((SInt16 *)dataBuffer + index, sampleBuffer, inNumberFrames * sizeof(SInt16));
 		self.fftIndex += inNumberFrames;
 	} else {
-		// NSLog(@"processing");
-		// If we enter this conditional, our buffer will be filled and we should
-		// perform the FFT.
-        
-	//	memcpy((SInt16 *)dataBuffer + index, sampleBuffer, read * sizeof(SInt16));
+
         memcpy((float *)dataBuffer + index, sampleBuffer, read * sizeof(float));
         
 		
 		// Reset the index.
 		self.fftIndex = 0;
-        
-        
-        // *************** FFT ***************
-        // convert Sint16 to floating point
-        
-        //petevDSP_vflt16((SInt16 *) dataBuffer, stride, (float *) outputBuffer, stride, bufferCapacity );
-        
-        
-		//
-		// Look at the real signal as an interleaved complex vector by casting it.
-		// Then call the transformation function vDSP_ctoz to get a split complex
-		// vector, which for a real signal, divides into an even-odd configuration.
-		//
-        
-        //pete vDSP_ctoz((COMPLEX*)outputBuffer, 2, &A, 1, nOver2);
+
 		vDSP_ctoz((COMPLEX*)dataBuffer, 2, &A, 1, nOver2);
         
 		// Carry out a Forward FFT transform.
@@ -294,14 +297,7 @@
 		// The output signal is now in a split real form. Use the vDSP_ztoc to get
 		// an interleaved complex vector.
         vDSP_ztoc(&A, 1, (COMPLEX *)analysisBuffer, 2, nOver2);
-		
-		// for display purposes...
-        //
-        // Determine the dominant frequency by taking the magnitude squared and
-		// saving the bin which it resides in. This isn't precise and doesn't
-        // necessary get the "fundamental" frequency, but its quick and sort of works...
-        
-        // note there are vdsp functions to do the amplitude calcs
+
         float dominantFrequency = 0;
         int bin = -1;
         for (int i=0; i<n; i+=2) {
@@ -311,420 +307,40 @@
 				bin = (i+1)/2;
 			}
 		}
-        float maxMagnitude = dominantFrequency;
-
-        dominantFrequency = bin*(self.graphSampleRate/bufferCapacity);
+        self.lastMaxMag = dominantFrequency;
+        self.lastDomFreq = bin*(self.graphSampleRate/bufferCapacity);
         
-        // printf("Dominant frequency: %f   \n" , dominantFrequency);
-    //    THIS.displayInputFrequency = (int) dominantFrequency;   // set instance variable with detected frequency
-		NSLog(@"frequency: %f magnitude: %f", dominantFrequency, maxMagnitude);
-        
-       // [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        
-        if (mouthChangeCount >=10) {
+		NSLog(@"frequency: %f magnitude: %f", self.lastDomFreq, self.lastMaxMag);
+	}
+    
+    return noErr;
+}
 
-        dispatch_async(dispatch_get_main_queue(), ^{   
-            if (maxMagnitude < 50) {
-                [(MainBobbleViewController*)self.delegate setMouth:0];
-            }else if(maxMagnitude < 600){
-                [(MainBobbleViewController*)self.delegate setMouth:1];
-
-            }else{
-                [(MainBobbleViewController*)self.delegate setMouth:2];
-            }
-        });
-            mouthChangeCount = 0;
-        }else{
-            mouthChangeCount++;
+-(void)switchMouth{
+    if (isPlaying) {
+        if (_mouthFrame < [self.mouthLevels count]) {
+            [(MainBobbleViewController*)self.delegate setMouth:[[self.mouthLevels objectAtIndex:_mouthFrame] integerValue]];
         }
-      //  }];
-        
-        
-        // Carry out an inverse FFT transform.
-		
-        vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_INVERSE );
-        
-        // scale it
-		
-		float scale = (float) 1.0 / (2 * n);
-		vDSP_vsmul(A.realp, 1, &scale, A.realp, 1, nOver2 );
-		vDSP_vsmul(A.imagp, 1, &scale, A.imagp, 1, nOver2 );
-		
-		
-        // convert from split complex to interleaved complex form
-		
-		//pete vDSP_ztoc(&A, 1, (COMPLEX *) outputBuffer, 2, nOver2);
-		vDSP_ztoc(&A, 1, (COMPLEX *) dataBuffer, 2, nOver2);
-        
-        // now convert from float to Sint16
-		
-		//pete vDSP_vfixr16((float *) outputBuffer, stride, (SInt16 *) sampleBuffer, stride, bufferCapacity );
-	}
-    
-    return noErr;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-// pitch shifter using stft - based on dsp dimension articles and source
-// http://www.dspdimension.com/admin/pitch-shifting-using-the-ft/
-
--(OSStatus) fftPitchShift:(UInt32) inNumberFrames buffer:(float*)sampleBuffer {      // frames (sample data)
-    
-	FFTSetup fftSetup = self.fftSetup;      // fft setup structures need to support vdsp functions
-    
-//	uint32_t stride = 1;                    // interleaving factor for vdsp functions
-//	int bufferCapacity = self.fftBufferCapacity;    // maximum size of fft buffers
-    
-    // float pitchShift = .3;                 // pitch shift factor 1=normal, range is .5->2.0
-    long osamp = 2;//4                         // oversampling factor
-    long fftSize = 1024;                    // fft size
-	float frequency;                        // analysis frequency result
-    
-    [self smb2PitchShift:effectPitch
-       numSampsToProcess:(long)inNumberFrames
-            fftFrameSize:fftSize
-                   osamp:osamp
-              sampleRate:(float)self.graphSampleRate
-                  indata:(float *) sampleBuffer
-                 outdata:(float *) sampleBuffer
-                fftSetup:fftSetup
-               frequency:&frequency];
-
-    NSLog(@"freq: %f", frequency);
-
-    // now convert from float to Sint16
-    
-//    vDSP_vfixr16((float *) outputBuffer, stride, (SInt16 *) sampleBuffer, stride, bufferCapacity );
- //pete   vDSP_vfixr16((float *) sampleBuffer, stride, (SInt16 *) sampleBuffer, stride, bufferCapacity );
-
-    return noErr;
-}
-
-
--(void) smb2PitchShift:(float)pitchShift
-     numSampsToProcess:(long)numSampsToProcess
-          fftFrameSize:(long)fftFrameSize
-                 osamp:(long)osamp
-            sampleRate:(float)sampleRate
-                indata:(float *)indata
-               outdata:(float *)outdata
-              fftSetup:(FFTSetup)fftSetup
-             frequency:(float *)frequency
-/*
- Routine smbPitchShift(). See top of file for explanation
- Purpose: doing pitch shifting while maintaining duration using the Short
- Time Fourier Transform.
- Author: (c)1999-2009 Stephan M. Bernsee <smb [AT] dspdimension [DOT] com>
- */
-{
-	static float gInFIFO[MAX_FRAME_LENGTH];
-	static float gOutFIFO[MAX_FRAME_LENGTH];
-	static float gFFTworksp[2*MAX_FRAME_LENGTH];
-	static float gLastPhase[MAX_FRAME_LENGTH/2+1];
-	static float gSumPhase[MAX_FRAME_LENGTH/2+1];
-	static float gOutputAccum[2*MAX_FRAME_LENGTH];
-	static float gAnaFreq[MAX_FRAME_LENGTH];
-	static float gAnaMagn[MAX_FRAME_LENGTH];
-	static float gSynFreq[MAX_FRAME_LENGTH];
-	static float gSynMagn[MAX_FRAME_LENGTH];
-	
-	static COMPLEX_SPLIT A;
-	
-	static long gRover = FALSE, gInit = FALSE;
-	double magn, phase, tmp, window, real, imag;
-	double freqPerBin;
-	double expct;		// expected phase difference tz
-	long i,k, qpd, index, inFifoLatency, stepSize, fftFrameSize2;
-	
-	int stride;
-	size_t bufferCapacity;	// In samples
-	int log2n, n, nOver2;		// params for fft setup
-	
-	float maxMag;	// tz maximum magnitude for pitch detection display
-	float displayFreq;	// true pitch from last window analysis
-	int pitchCount = 0;	// number of times pitch gets measured
-	float freqTotal = 0; // sum of all pitch measurements
-	
-	/* set up some handy variables */
-	fftFrameSize2 = fftFrameSize/2;
-	stepSize = fftFrameSize/osamp;
-	freqPerBin = sampleRate/(double)fftFrameSize;
-	expct = 2.*M_PI*(double)stepSize/(double)fftFrameSize;
-	inFifoLatency = fftFrameSize-stepSize;
-	if (gRover == FALSE) gRover = inFifoLatency;
-	
-	stride = 1;
-	log2n = log2f(fftFrameSize);		// log base2 of max number of frames, eg., 10 for 1024
-	n = 1 << log2n;					// actual max number of frames, eg., 1024 - what a silly way to compute it
-	
-	nOver2 = fftFrameSize/2;
-	bufferCapacity = fftFrameSize;
-    //	index = 0;
-    
-	/* initialize our static arrays */
-	if (gInit == FALSE) {
-		NSLog(@"init static arrays");
-		//printFFTInitSnapshot(fftFrameSize2,stepSize, freqPerBin, expct, inFifoLatency, gRover);
-
-		memset(gInFIFO, 0, MAX_FRAME_LENGTH*sizeof(float));
-		memset(gOutFIFO, 0, MAX_FRAME_LENGTH*sizeof(float));
-		memset(gFFTworksp, 0, 2*MAX_FRAME_LENGTH*sizeof(float));
-		memset(gLastPhase, 0, (MAX_FRAME_LENGTH/2+1)*sizeof(float));
-		memset(gSumPhase, 0, (MAX_FRAME_LENGTH/2+1)*sizeof(float));
-		memset(gOutputAccum, 0, 2*MAX_FRAME_LENGTH*sizeof(float));
-		memset(gAnaFreq, 0, MAX_FRAME_LENGTH*sizeof(float));
-		memset(gAnaMagn, 0, MAX_FRAME_LENGTH*sizeof(float));
-		
-		// split complex number buffer
-		A.realp = (float *)malloc(nOver2 * sizeof(float));		//
-		A.imagp = (float *)malloc(nOver2 * sizeof(float));		// why is it set to half the frame size
-
-		gInit = true;
-	}
-	
-	/* main processing loop */
-	for (i = 0; i < numSampsToProcess; i++){
-		
-		// loading
-		
-		// load the next section of data, one stepsize chunk at a time, starting at beginning of indata. the chunk gets loaded
-		// to a slot at the end of the gInFIFO, while at the same time, the chunk at the beginning of gOutFIFO gets loaded to into
-		// the outdata buffer one chunk at a time starting at the beginning.
-		//
-		// the very first time this pitchshifter is called, the gOutFIFO will be initialized with zero's so it looks like
-		// there will be some latency before the actual 'processed' samples begin to fill outdata.
-		//
-		
-		/* As long as we have not yet collected enough data, just read in */
-		gInFIFO[gRover] = indata[i];
-		outdata[i] = gOutFIFO[gRover-inFifoLatency];
-		gRover++;
-		
-		/* now we have enough data for processing */
-		if (gRover >= fftFrameSize) {
-			gRover = inFifoLatency;			// gRover cycles up between (fftFrameSize - stepsize) and fftFrameSize
-			// eg., 896 - 1024 for an osamp of 8 and framesize of 1024
-			
-			/* do windowing and re,im interleave */
-			// note that the first time this runs, the inFIFO will be mostly zeroes, but essentially, the fft runs on
-			// data that keeps getting slid to the left?
-			
-			// the window is like a triangular hat that gets imposed over the sample buffer before its input to the fft
-			// the size of the hat is the fftsize and it scales off the data at beginning and end of the buffer
-			
-			// i think that the vDSP_ctoz function will accomplish the interleaving and complex formatting stuff below
-			// we would still need to do the windowing, but maybe there's an apple function for that too
-
-			for (k = 0; k < fftFrameSize;k++) {
-				window = -.5*cos(2.*M_PI*(double)k/(double)fftFrameSize)+.5;
-				gFFTworksp[k] = gInFIFO[k] * window;				// real part is winowed amplitude of samples
-                //				gFFTworksp[2*k+1] = 0.;								// imag part is set to 0
-				//	NSLog(@"i: %d, k: %d, window: %f", i, k, window );
-			}
-			
-			// cast to complex interleaved then convert to split complex vector
-			
-			vDSP_ctoz((COMPLEX*)gFFTworksp, 2, &A, 1, nOver2);
-			
-			// Carry out a Forward FFT transform.
-            //			NSLog(@"before transform");
-			
-			vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_FORWARD);
-			
-            //			NSLog(@"after transform");
-            // convert from split complex to complex interleaved for analysis
-			
-			vDSP_ztoc(&A, 1, (COMPLEX *)gFFTworksp, 2, nOver2);
-			
-			/* ***************** ANALYSIS ******************* */
-			/* do transform */
-			// lets try replacing this with accelerate functions
-			
-            //	smbFft(gFFTworksp, fftFrameSize, -1);
-			
-			/* this is the analysis step */
-			// this is looping through the fft output bins in the frequency domain
-			
-			for (k = 0; k <= fftFrameSize2; k++) {
-				
-				/* de-interlace FFT buffer */
-				real = gFFTworksp[2*k];
-				imag = gFFTworksp[2*k+1];
-				
-				/* compute magnitude and phase */
-				magn = 2.*sqrt(real*real + imag*imag);
-				phase = atan2(imag,real);
-				
-				/* compute phase difference */
-				// the gLastPhase[k] would be the phase from the kth frequency bin from the previous transform over this endlessly
-				// shifting data
-				
-				tmp = phase - gLastPhase[k];
-				gLastPhase[k] = phase;
-				
-				/* subtract expected phase difference */
-				tmp -= (double)k*expct;
-				
-				/* map delta phase into +/- Pi interval */
-				qpd = tmp/M_PI;
-				if (qpd >= 0) qpd += qpd&1;
-				else qpd -= qpd&1;
-				
-				tmp -= M_PI*(double)qpd;
-				
-				/* get deviation from bin frequency from the +/- Pi interval */
-				tmp = osamp*tmp/(2.*M_PI);
-				
-				/* compute the k-th partials' true frequency */
-				tmp = (double)k*freqPerBin + tmp*freqPerBin;
-				
-				/* store magnitude and true frequency in analysis arrays */
-				gAnaMagn[k] = magn;
-				gAnaFreq[k] = tmp;
-			}
-			
-            // pitch detection ------------------
-            // find max magnitude for this pass
-         
-            maxMag = 0.0;
-            displayFreq = 0.0;
-            for (k = 0; k <= fftFrameSize2; k++) {
-                if (gAnaMagn[k] > maxMag) {
-                    maxMag = gAnaMagn[k];
-                    displayFreq = gAnaFreq[k];
-				}
-            }
+    }else{
+        int index = 0;
+        if (self.lastMaxMag > 60) {
             
-			freqTotal += displayFreq;
-			pitchCount++;
-			
-			/* ***************** PROCESSING ******************* */
-			/* this does the actual pitch shifting */
-			memset(gSynMagn, 0, fftFrameSize*sizeof(float));	// why do we zero out the buffer to frame size but
-			memset(gSynFreq, 0, fftFrameSize*sizeof(float));	// only actually seem to use half of frame size?
-			
-			// so this code assigns the results of the analysis.
-			// it sets up pitch shifted bins using analyzed magnitude and analyzed freq * pitchShift
-			
-			for (k = 0; k <= fftFrameSize2; k++) {
-				index = (long) (k * pitchShift);
-				//			NSLog(@"i: %d, index: %d, k: %d, pitchShift: %f", i, index, k, pitchShift );
-				if (index <= fftFrameSize2) {
-					gSynMagn[index] += gAnaMagn[k];
-					gSynFreq[index] = gAnaFreq[k] * pitchShift;
-				}
-			}
-			
-			/* ***************** SYNTHESIS ******************* */
-			/* this is the synthesis step */
-			for (k = 0; k <= fftFrameSize2; k++) {
-				
-				/* get magnitude and true frequency from synthesis arrays */
-				magn = gSynMagn[k];
-				tmp = gSynFreq[k];
-				
-				/* subtract bin mid frequency */
-				tmp -= (double)k*freqPerBin;
-				
-				/* get bin deviation from freq deviation */
-				tmp /= freqPerBin;
-				
-				/* take osamp into account */
-				tmp = 2.*M_PI*tmp/osamp;
-				
-				/* add the overlap phase advance back in */
-				tmp += (double)k*expct;
-				
-				/* accumulate delta phase to get bin phase */
-				gSumPhase[k] += tmp;
-				phase = gSumPhase[k];
-				
-				/* get real and imag part and re-interleave */
-				gFFTworksp[2*k] = magn*cos(phase);
-				gFFTworksp[2*k+1] = magn*sin(phase);
-			}
-			
-			/* zero negative frequencies */
-			for (k = fftFrameSize+2; k < 2*fftFrameSize; k++) gFFTworksp[k] = 0.;
-            
-            // convert from complex interleaved to split complex vector
-            
-			vDSP_ctoz((COMPLEX*)gFFTworksp, 2, &A, 1, nOver2);
-			
-			// Carry out an inverse FFT transform.
-			
-			vDSP_fft_zrip(fftSetup, &A, stride, log2n, FFT_INVERSE );
-			
-			// scale it
-            
-            //		the suggested scale factor makes the sound barely audible
-            //		so we should probably experiment with various things
-            //		I have a hunch that the stfft needs a different kind of scaling
-			
-            //		float scale = (float) 1.0 / (2 * n);
-            //		float scale = (float) 1.0 / (osamp);
-			float scale = .25;
-			vDSP_vsmul(A.realp, 1, &scale, A.realp, 1, nOver2 );
-			vDSP_vsmul(A.imagp, 1, &scale, A.imagp, 1, nOver2 );
-			
-			
-			// covert from split complex to complex interleaved
-			
-			vDSP_ztoc(&A, 1, (COMPLEX *) gFFTworksp, 2, nOver2);
-			
-			/* do inverse transform */
-            //			smbFft(gFFTworksp, fftFrameSize, 1);
-			
-			/* do windowing and add to output accumulator */
-			
-            /*
-             for(k=0; k < fftFrameSize; k++) {
-             window = -.5*cos(2.*M_PI*(double)k/(double)fftFrameSize)+.5;
-             gOutputAccum[k] += 2.*window*gFFTworksp[2*k]/(fftFrameSize2*osamp);
-             }
-             
-             */
-			/* do windowing and add to output accumulator */
-			for(k=0; k < fftFrameSize; k++) {
-				window = -.5*cos(2.*M_PI*(double)k/(double)fftFrameSize)+.5;
-				gOutputAccum[k] += 2.*window*gFFTworksp[k]/(fftFrameSize2*osamp);
-			}
-			
-			for (k = 0; k < stepSize; k++) gOutFIFO[k] = gOutputAccum[k];
-			
-			// why use two different methods to copy memory?
-			
-			/* shift accumulator */
-			// this shifts in zeroes from beyond the bounds of framesize to fill the upper step size chunk
-			
-			memmove(gOutputAccum, gOutputAccum+stepSize, fftFrameSize*sizeof(float));
-			
-			/* move input FIFO */
-			for (k = 0; k < inFifoLatency; k++) gInFIFO[k] = gInFIFO[k+stepSize];
-		}
-	}
-	
-    *frequency = (float) (freqTotal / pitchCount);
-    
-    NSLog(@"Max Freq: %f",maxMag);
-    
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (maxMag < 100) {
-                [(MainBobbleViewController*)self.delegate setMouth:0];
-            }else if(maxMag >= 100 && maxMag < 200){
-                [(MainBobbleViewController*)self.delegate setMouth:1];
-            }else if(maxMag >= 200 && maxMag < 300){
-                [(MainBobbleViewController*)self.delegate setMouth:2];
-            }else if(maxMag >= 300 && maxMag < 400){
-                [(MainBobbleViewController*)self.delegate setMouth:3];
-            }else if(maxMag >= 400 && maxMag < 500){
-                [(MainBobbleViewController*)self.delegate setMouth:4];
+            if(self.lastDomFreq < 200){
+                index = 1;
+            }else if(self.lastDomFreq < 400){
+                index = 2;
+            }else if(self.lastDomFreq < 500){
+                index = 3;
+            }else if(self.lastDomFreq < 600){
+                index = 4;
             }else{
-                [(MainBobbleViewController*)self.delegate setMouth:5];
+                index = 5;
             }
-        });
+        }
+        [(MainBobbleViewController*)self.delegate setMouth:index];
+        [self.mouthLevels setObject:[NSNumber numberWithInt:index] atIndexedSubscript:_mouthFrame];
+    }
+    _mouthFrame++;
 }
 
 
@@ -732,10 +348,137 @@
     effectPitch = [(UISlider*)sender value];
 }
 
+-(void)createNewAudioFileWithPitch:(float)pitch{
+    self.reader = [[EAFRead alloc] init];
+	writer = [[EAFWrite alloc] init];
+	[NSThread detachNewThreadSelector:@selector(processThread:) toTarget:self withObject:nil];
+}
+
+-(void)processThread:(id)param
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+	long numChannels = 1;		// DIRAC LE allows mono only
+	float sampleRate = 44100.;
+    
+	// open input file
+	[self.reader openFileForRead:self.originalSoundFileURL sr:sampleRate channels:numChannels];
+	
+	// create output file (overwrite if exists)
+	[writer openFileForWrite:self.shiftedSoundFileURL sr:sampleRate channels:numChannels wordLength:16 type:kAudioFileAIFFType];
+	
+	// DIRAC parameters
+	// Here we set our time an pitch manipulation values
+	float time      = 1.0;                 // 400% length
+	float pitch     = powf(2.f, (int)effectPitch / 12.f);     // pitch shift (0 semitones)
+	
+	// First we set up DIRAC to process numChannels of audio at 44.1kHz
+	// N.b.: The fastest option is kDiracLambdaPreview / kDiracQualityPreview, best is kDiracLambda3, kDiracQualityBest
+	// The probably best *default* option for general purpose signals is kDiracLambda3 / kDiracQualityGood
+	void *dirac = DiracCreate(kDiracLambdaTranscribe, kDiracQualityBest, numChannels, sampleRate, &myReadData, (void*)self);
+	//	void *dirac = DiracCreate(kDiracLambda3, kDiracQualityBest, numChannels, sampleRate, &myReadData);
+	if (!dirac) {
+		printf("!! ERROR !!\n\n\tCould not create DIRAC instance\n\tCheck number of channels and sample rate!\n");
+		printf("\n\tNote that the free DIRAC LE library supports only\n\tone channel per instance\n\n\n");
+		exit(-1);
+	}
+	
+	// Pass the values to our DIRAC instance
+	DiracSetProperty(kDiracPropertyTimeFactor, time, dirac);
+	DiracSetProperty(kDiracPropertyPitchFactor, pitch, dirac);
+	
+	// upshifting pitch will be slower, so in this case we'll enable constant CPU pitch shifting
+	if (pitch > 1.0)
+		DiracSetProperty(kDiracPropertyUseConstantCpuPitchShift, 1, dirac);
+	
+	// Print our settings to the console
+	DiracPrintSettings(dirac);
+	
+	
+	NSLog(@"Running DIRAC version %s\nStarting processing", DiracVersion());
+	
+	// Get the number of frames from the file to display our simplistic progress bar
+	SInt64 numf = [self.reader fileNumFrames];
+	SInt64 outframes = 0;
+	SInt64 newOutframe = numf*time;
+	long lastPercent = -1;
+	percent = 0;
+	
+	// This is an arbitrary number of frames per call. Change as you see fit
+	long numFrames = 8192;
+	
+	// Allocate buffer for output
+	float **audio = AllocateAudioBuffer(numChannels, numFrames);
+    
+	double bavg = 0;
+	
+	// MAIN PROCESSING LOOP STARTS HERE
+	for(;;) {
+		
+		// Display ASCII style "progress bar"
+		percent = 100.f*(double)outframes / (double)newOutframe;
+		long ipercent = percent;
+		if (lastPercent != percent) {
+			//[self performSelectorOnMainThread:@selector(updateBarOnMainThread:) withObject:self waitUntilDone:NO];
+			printf("\rProgress: %3li%% [%-40s] ", ipercent, &"||||||||||||||||||||||||||||||||||||||||"[40 - ((ipercent>100)?40:(2*ipercent/5))] );
+			lastPercent = ipercent;
+			fflush(stdout);
+		}
+		
+		DiracStartClock();								// ............................. start timer ..........................................
+		
+		// Call the DIRAC process function with current time and pitch settings
+		// Returns: the number of frames in audio
+		long ret = DiracProcess(audio, numFrames, dirac);
+		bavg += (numFrames/sampleRate);
+		gExecTimeTotal += DiracClockTimeSeconds();		// ............................. stop timer ..........................................
+		
+		printf("x realtime = %3.3f : 1 (DSP only), CPU load (peak, DSP+disk): %3.2f%%\n", bavg/gExecTimeTotal, DiracPeakCpuUsagePercent(dirac));
+		
+		// Process only as many frames as needed
+		long framesToWrite = numFrames;
+		unsigned long nextWrite = outframes + numFrames;
+		if (nextWrite > newOutframe) framesToWrite = numFrames - nextWrite + newOutframe;
+		if (framesToWrite < 0) framesToWrite = 0;
+		
+		// Write the data to the output file
+		[writer writeFloats:framesToWrite fromArray:audio];
+		
+		// Increase our counter for the progress bar
+		outframes += numFrames;
+		
+		// As soon as we've written enough frames we exit the main loop
+		if (ret <= 0) break;
+	}
+	
+	percent = 100;
+	//[self performSelectorOnMainThread:@selector(updateBarOnMainThread:) withObject:self waitUntilDone:NO];
+    
+	
+	// Free buffer for output
+	DeallocateAudioBuffer(audio, numChannels);
+	
+	// destroy DIRAC instance
+	DiracDestroy( dirac );
+	
+	// Done!
+	NSLog(@"\nDone!");
+	
+	[self.reader release];
+	[writer release]; // important - flushes data to file
+	
+	// start playback on main thread
+    //	[self performSelectorOnMainThread:@selector(playOnMainThread:) withObject:self waitUntilDone:NO];
+	
+	[pool release];
+}
+
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     recordButton.enabled = YES;
     stopButton.enabled = NO;
+    isPlaying = NO;
+    [self.mouthTimer invalidate];
 }
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player

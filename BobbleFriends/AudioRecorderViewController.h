@@ -13,6 +13,10 @@
 #import "RingBuffer.h"
 #import "AudioFileReader.h"
 #import "AudioFileWriter.h"
+#import "DiracFxAudioPlayer.h"
+#import "EAFRead.h"
+#import "EAFWrite.h"
+
 
 #define MAX_FRAME_LENGTH 4096	// tz
 
@@ -29,9 +33,22 @@
     AudioFileWriter *fileWriter;
     RingBuffer *ringBuffer;
     
+    DiracFxAudioPlayer *mDiracAudioPlayer;
+    
+    float percent;
+
+//	NSURL *inUrl;
+//	NSURL *outUrl;
+//	EAFRead *reader;
+	EAFWrite *writer;
+    
     int _timerCounter;
     int _timerDuration;
     int mouthChangeCount;
+    
+    int _mouthFrame;
+    
+    BOOL isPlaying;
 }
 
 @property (strong, nonatomic) id delegate;
@@ -40,6 +57,8 @@
 @property (nonatomic, retain) IBOutlet UIButton *recordButton;
 @property (nonatomic, retain) IBOutlet UIButton *stopButton;
 @property (strong, nonatomic) NSTimer *recordTimer;
+@property (strong, nonatomic) NSTimer *mouthTimer;
+
 
 @property (readwrite)  Float64 graphSampleRate;
 @property (assign, nonatomic) FFTSetup fftSetup;			// fft predefined structure required by vdsp fft functions
@@ -56,6 +75,14 @@
 @property (assign, nonatomic) SInt16 *conversionBufferLeft;   // for data conversion from fixed point to integer
 @property (assign, nonatomic) SInt16 *conversionBufferRight;   // for data conversion from fixed point to integer
 
+@property (nonatomic, strong) EAFRead *reader;
+@property (strong, nonatomic) NSURL *originalSoundFileURL;
+@property (strong, nonatomic) NSURL *shiftedSoundFileURL;
+
+@property (assign) float lastDomFreq;
+@property (assign) float lastMaxMag;
+
+@property (nonatomic, strong) NSMutableArray* mouthLevels;
 
 - (IBAction)recordAudioPressed:(id)sender;
 - (IBAction)stopAudioPressed:(id)sender;
@@ -63,5 +90,9 @@
 
 - (void) FFTSetup;
 - (OSStatus)fftPassThrough:(UInt32)inNumberFrames buffer:(float*)sampleBuffer;
+
+-(void)diracPlayerDidFinishPlaying:(DiracAudioPlayerBase*)player successfully:(BOOL)flag;
+
+
 
 @end

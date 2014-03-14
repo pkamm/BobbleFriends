@@ -38,7 +38,7 @@
     
     AVAssetExportSession* _assetExport;
     
-    NSInteger _mouthLevels[200];
+    NSInteger _mouthLevels[1000];
     NSInteger _currentMouthFrame;
 }
 
@@ -55,5 +55,8 @@
 - (CGAffineTransform)createNextTransform:(BOOL)forVideo;
 -(void)setMouth:(int)mouthLevel;
 -(void)showInterstitialAd;
+-(void)setMouth:(int)mouthLevel forMouthFrame:(int)mouthframe;
+-(int)getMouthForIndex:(int)index;
+
 
 @end

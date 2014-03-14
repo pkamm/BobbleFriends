@@ -29,39 +29,29 @@
 
 @interface AudioFileWriter()
 
-@property AudioStreamBasicDescription outputFormat;
-@property ExtAudioFileRef outputFile;
-@property UInt32 outputBufferSize;
-@property float *outputBuffer;
-@property float *holdingBuffer;
-@property SInt64 currentFileTime;
-@property dispatch_source_t callbackTimer;
-@property (readwrite) float currentTime;
+// redeclare as readwrite in class continuation
+@property (nonatomic, assign, getter=getDuration, readwrite) float currentTime;
+@property (nonatomic, assign, getter=getDuration, readwrite) float duration;
+@property (nonatomic, assign, readwrite) float samplingRate;
+@property (nonatomic, assign, readwrite) UInt32 numChannels;
+@property (nonatomic, assign, readwrite) float latency;
+@property (nonatomic, copy, readwrite)   NSURL *audioFileURL;
+@property (nonatomic, assign, readwrite) BOOL recording;
+
+@property (nonatomic, assign) AudioStreamBasicDescription outputFormat;
+@property (nonatomic, assign) ExtAudioFileRef outputFile;
+@property (nonatomic, assign) UInt32 outputBufferSize;
+@property (nonatomic, assign) float *outputBuffer;
+@property (nonatomic, assign) float *holdingBuffer;
+@property (nonatomic, assign) SInt64 currentFileTime;
+@property (nonatomic, assign) dispatch_source_t callbackTimer;
 
 @end
-
 
 
 @implementation AudioFileWriter
 
 static pthread_mutex_t outputAudioFileLock;
-
-@synthesize outputFormat = _outputFormat;
-@synthesize outputFile = _outputFile;
-@synthesize outputBuffer = _outputBuffer;
-@synthesize holdingBuffer = _holdingBuffer;
-@synthesize outputBufferSize = _outputBufferSize;
-@synthesize currentFileTime = _currentFileTime;
-@synthesize callbackTimer = _callbackTimer;
-
-@synthesize currentTime = _currentTime;
-@synthesize duration = _duration;
-@synthesize samplingRate = _samplingRate;
-@synthesize latency = _latency;
-@synthesize numChannels = _numChannels;
-@synthesize audioFileURL = _audioFileURL;
-@synthesize writerBlock = _writerBlock;
-@synthesize recording = _recording;
 
 - (void)dealloc
 {
@@ -70,7 +60,6 @@ static pthread_mutex_t outputAudioFileLock;
     free(self.outputBuffer);
     free(self.holdingBuffer);
     
-    [super dealloc];
 }
 
 - (id)initWithAudioFileURL:(NSURL *)urlToAudioFile samplingRate:(float)thisSamplingRate numChannels:(UInt32)thisNumChannels
@@ -78,16 +67,19 @@ static pthread_mutex_t outputAudioFileLock;
     self = [super init];
     if (self)
     {
+        
         // Zero-out our timer, so we know we're not using our callback yet
         self.callbackTimer = nil;
         
+        
         // Open a reference to the audio file
         self.audioFileURL = urlToAudioFile;
-        CFURLRef audioFileRef = (CFURLRef)self.audioFileURL;
+        CFURLRef audioFileRef = (__bridge CFURLRef)self.audioFileURL;
         
         AudioStreamBasicDescription outputFileDesc = {44100.0, kAudioFormatMPEG4AAC, 0, 0, 1024, 0, thisNumChannels, 0, 0};
         
         CheckError(ExtAudioFileCreateWithURL(audioFileRef, kAudioFileM4AType, &outputFileDesc, NULL, kAudioFileFlags_EraseFile, &_outputFile), "Creating file");
+        
         
         // Set a few defaults and presets
         self.samplingRate = thisSamplingRate;
@@ -95,7 +87,9 @@ static pthread_mutex_t outputAudioFileLock;
         self.currentTime = 0.0;
         self.latency = .011609977; // 512 samples / ( 44100 samples / sec ) default
         
-        // Single ch float format
+        
+        // We're going to impose a format upon the input file
+        // Single-channel float does the trick.
         _outputFormat.mSampleRate = self.samplingRate;
         _outputFormat.mFormatID = kAudioFormatLinearPCM;
         _outputFormat.mFormatFlags = kAudioFormatFlagIsFloat;
@@ -107,6 +101,7 @@ static pthread_mutex_t outputAudioFileLock;
         
         // Apply the format to our file
         ExtAudioFileSetProperty(_outputFile, kExtAudioFileProperty_ClientDataFormat, sizeof(AudioStreamBasicDescription), &_outputFormat);
+        
         
         // Arbitrary buffer sizes that don't matter so much as long as they're "big enough"
         self.outputBuffer = (float *)calloc(2*self.samplingRate, sizeof(float));
@@ -146,11 +141,13 @@ static pthread_mutex_t outputAudioFileLock;
     SInt64 frameOffset = 0;
     ExtAudioFileTell(self.outputFile, &frameOffset);
     self.currentTime = (float)frameOffset / self.samplingRate;
+    
 }
 
-// Calculate duration of the audio file
+
 - (float)getDuration
 {
+    // We're going to directly calculate the duration of the audio file (in seconds)
     SInt64 framesInThisFile;
     UInt32 propertySize = sizeof(framesInThisFile);
     ExtAudioFileGetProperty(self.outputFile, kExtAudioFileProperty_FileLengthFrames, &propertySize, &framesInThisFile);
@@ -160,34 +157,46 @@ static pthread_mutex_t outputAudioFileLock;
     ExtAudioFileGetProperty(self.outputFile, kExtAudioFileProperty_FileDataFormat, &propertySize, &fileStreamFormat);
     
     return (float)framesInThisFile/(float)fileStreamFormat.mSampleRate;
+    
 }
+
+
 
 - (void)configureWriterCallback
 {
-    if (!self.callbackTimer){
+    
+    if (!self.callbackTimer)
+    {
         self.callbackTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
     }
-    if (self.callbackTimer){
-        
+    
+    if (self.callbackTimer)
+    {
         UInt32 numSamplesPerCallback = (UInt32)( self.latency * self.samplingRate );
         dispatch_source_set_timer(self.callbackTimer, dispatch_walltime(NULL, 0), self.latency*NSEC_PER_SEC, 0);
         dispatch_source_set_event_handler(self.callbackTimer, ^{
-
+            
+            
             if (self.writerBlock) {                
                 // Call out with the audio that we've got.
                 self.writerBlock(self.outputBuffer, numSamplesPerCallback, self.numChannels);
                 
                 // Get audio from the block supplier
                 [self writeNewAudio:self.outputBuffer numFrames:numSamplesPerCallback numChannels:self.numChannels];
+                
             }
+            
         });
+        
     }
+    
 }
 
 
 
 - (void)record;
 {
+    
     // Configure (or if necessary, create and start) the timer for retrieving MP3 audio
     [self configureWriterCallback];
     
@@ -196,10 +205,12 @@ static pthread_mutex_t outputAudioFileLock;
         dispatch_resume(self.callbackTimer);
         self.recording = TRUE;
     }
+    
 }
 
 - (void)stop
 {
+    // Close the
     pthread_mutex_lock( &outputAudioFileLock );
     ExtAudioFileDispose(self.outputFile);
     pthread_mutex_unlock( &outputAudioFileLock );

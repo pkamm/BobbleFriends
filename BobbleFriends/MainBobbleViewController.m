@@ -61,7 +61,7 @@ NSString *adSpaceName = @"INTERSTITIAL_MAIN_VIEW";
     
     frameNumber = 0;
     _currentMouthFrame = 0;
-    _mouthLevels[199] = {0};
+    _mouthLevels[999] = {0};
     
     videoSaveFileManager = [NSFileManager defaultManager];
     
@@ -155,7 +155,7 @@ interstitial {
 
 - (IBAction)saveBobbleToCameraRoll:(id)sender {
     
-    if (_shareVC || _speedSlider || _audioRecorder) {
+    if (_shareVC || (_audioRecorder && ![_audioRecorder.view isHidden]) || _speedSlider) {
         [self hideControllsButtonPressed:nil];
     }else{
         _shareVC = [[ShareViewController alloc] initWithNibName:@"ShareViewController" bundle:[NSBundle mainBundle]];
@@ -173,14 +173,17 @@ interstitial {
 
 - (IBAction)recordButtonPressed:(id)sender {
     
-    if (_shareVC || _audioRecorder || _speedSlider) {
+    if (_shareVC || (_audioRecorder && ![_audioRecorder.view isHidden]) || _speedSlider) {
         [self hideControllsButtonPressed:nil];
     }else{
-        _audioRecorder = [[AudioRecorderViewController alloc] initWithNibName:@"AudioRecorderViewController" bundle:[NSBundle mainBundle]];
-        [_audioRecorder setDelegate:self];
+        if (!_audioRecorder) {
+
+            _audioRecorder = [[AudioRecorderViewController alloc] initWithNibName:@"AudioRecorderViewController" bundle:[NSBundle mainBundle]];
+            [_audioRecorder setDelegate:self];
         
         [_audioRecorder.view setFrame:CGRectMake(0, self.view.frame.size.height - self.bottomNavBarView.frame.size.height+20, self.view.frame.size.width, _audioRecorder.view.frame.size.height)];
-        
+        }
+        [_audioRecorder.view setHidden:NO];
         [self.view insertSubview:_audioRecorder.view belowSubview:self.bottomNavBarView];
         [UIView animateWithDuration:.4 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
             [_audioRecorder.view setFrame:CGRectMake(0, self.view.frame.size.height - self.bottomNavBarView.frame.size.height-_audioRecorder.view.frame.size.height+2, self.view.frame.size.width, _audioRecorder.view.frame.size.height)];
@@ -192,8 +195,9 @@ interstitial {
     [UIView animateWithDuration:.4 delay:0 options:UIViewAnimationCurveEaseInOut animations:^{
         [_audioRecorder.view setFrame:CGRectMake(0, self.view.frame.size.height - self.bottomNavBarView.frame.size.height+10, self.view.frame.size.width, _audioRecorder.view.frame.size.height)];
     } completion:^(BOOL finished) {
-        [_audioRecorder removeFromParentViewController];
-        _audioRecorder = nil;
+      //  [_audioRecorder removeFromParentViewController];
+      //  _audioRecorder = nil;
+        [_audioRecorder.view setHidden:YES];
     }];
 }
 
@@ -217,7 +221,7 @@ interstitial {
 
 - (IBAction)speedButtonPressed:(id)sender {
     
-    if (_shareVC || _audioRecorder || _speedSlider) {
+    if (_shareVC || (_audioRecorder && ![_audioRecorder.view isHidden]) || _speedSlider) {
         [self hideControllsButtonPressed:nil];
     }else{
         _speedSlider = [[SpeedModulationViewController alloc] initWithNibName:@"SpeedModulationViewController" bundle:[NSBundle mainBundle]];
@@ -235,10 +239,10 @@ interstitial {
 -(void)animation1{
 
     [self.bobblingHeadView setTransform:[self createNextTransform:NO]];
-    if ([_audioRecorder recordTimer]) {
-        _mouthLevels[_currentMouthFrame] = self.headImageView.tag;
-        _currentMouthFrame++;
-    }
+//    if ([_audioRecorder recordTimer]) {
+//        _mouthLevels[_currentMouthFrame] = self.headImageView.tag;
+//        _currentMouthFrame++;
+//    }
 }
 
 -(CGAffineTransform)createNextTransform:(BOOL)forVideo{
@@ -479,11 +483,13 @@ interstitial {
     if (result == NO) //failes on 3GS, but works on iphone 4
         NSLog(@"failed to append buffer");
 
-    int fps = 26;
+    int fps = FRAMES_PER_SEC;
     CMTime frameTime = CMTimeMake(1, fps);
     UIImage *imgFrame = nil;
     
-    for (int i = 0; i < 200; i++) {
+    int mouthIndex = 0;
+    
+    for (int i = 0; i < [[_audioRecorder mouthLevels] count]; i++) {
         if(i%10==0)
             NSLog(@"frame %d", i);
         
@@ -496,9 +502,10 @@ interstitial {
 //            imgFrame = [self applyTransform:[self createNextTransform] fromLayerRef:layerRef andContext:ctx];
 //            
 //            imgFrame = [self addBackgroundImage:imgFrame];
-
-            
-            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:_mouthLevels[i]] layerRef:nil context:nil];
+    
+            mouthIndex = i;//MAX(i/3-10,0);
+            NSLog(@"%d",[[[_audioRecorder mouthLevels] objectAtIndex:mouthIndex] intValue]);
+            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:[[[_audioRecorder mouthLevels] objectAtIndex:mouthIndex] intValue]] layerRef:nil context:nil];
 //
 //            CGContextRef layerContext = CGLayerGetContext(layerRef);
 //            CGContextDrawImage(layerContext, rect, ((UIImage*)[_headWithMouthImages objectAtIndex:_mouthLevels[i]]).CGImage);
@@ -549,7 +556,7 @@ interstitial {
     NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0] ;
     
     AVMutableComposition* mixComposition = [AVMutableComposition composition];
-    NSString *audio_inputFilePath = [documents stringByAppendingString:@"/audio.m4a"];
+    NSString *audio_inputFilePath = [documents stringByAppendingString:@"/shifted.aif"];
     
   //  NSString* audio_inputFilePath = [APP_DELEGATE soundFilePath];
     NSURL*    audio_inputFileUrl = [NSURL fileURLWithPath:audio_inputFilePath];
@@ -780,4 +787,11 @@ interstitial {
 }
 
 
+-(void)setMouth:(int)mouthLevel forMouthFrame:(int)mouthframe{
+    _mouthLevels[mouthframe] = mouthLevel;
+}
+
+-(int)getMouthForIndex:(int)index{
+    return _mouthLevels[index];
+}
 @end

@@ -15,7 +15,7 @@
     static BobbleIAPHelper * sharedInstance;
     dispatch_once(&once, ^{
         NSSet * productIdentifiers = [NSSet setWithObjects:
-                                      @"com.blankworldwide.bobbleFriends.purchase",
+                                      @"com.blankworldwide.bobblefriends.second",
                                       nil];
         sharedInstance = [[self alloc] initWithProductIdentifiers:productIdentifiers];
     });
