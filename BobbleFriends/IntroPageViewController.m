@@ -33,14 +33,14 @@
 
     UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     [t setText:@"BobbleFriends"];
-    [t setFont:[UIFont fontWithName:@"Foco-Bold" size:20]];
+    [t setFont:[UIFont fontWithName:@"Unkempt-Bold" size:20]];
     [t setTextColor:[UIColor whiteColor]];
     [t setBackgroundColor:[UIColor clearColor]];
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bar"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setBackgroundColor:[UIColor clearColor]];
 
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIFont fontWithName:@"Foco-Bold" size:20] forKey:UITextAttributeFont];
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIFont fontWithName:@"Unkempt-Bold" size:20] forKey:UITextAttributeFont];
 }
 
 - (void)didReceiveMemoryWarning

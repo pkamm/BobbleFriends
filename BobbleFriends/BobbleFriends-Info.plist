@@ -49,14 +49,8 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Foco-Bold.ttf</string>
-		<string>Foco-BoldItalic.ttf</string>
-		<string>Foco-Italic.ttf</string>
-		<string>Foco-Regular.ttf</string>
-		<string>FocoBlack-Italic.ttf</string>
-		<string>FocoBlack-Regular.ttf</string>
-		<string>FocoLight-Italic.ttf</string>
-		<string>FocoLight-Regular.ttf</string>
+		<string>Unkempt-Regular.ttf</string>
+		<string>Unkempt-Bold.ttf</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

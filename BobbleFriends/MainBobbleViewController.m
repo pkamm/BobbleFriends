@@ -330,32 +330,57 @@ interstitial {
 
 }
 
--(UIImage*)createBobbleFrame:(UIImage*)headImage layerRef:(CGLayerRef)layerRefd context:(CGContextRef)ctxs{
+//-(UIImage*)createBobbleFrame:(UIImage*)headImage layerRef:(CGLayerRef)layerRefd context:(CGContextRef)ctxs{
+//    NSLog(@"1");
+//    UIGraphicsBeginImageContextWithOptions(self.backgroundImage.bounds.size, NO, 0.0f);
+//    CGContextRef ctx = UIGraphicsGetCurrentContext();
+//    CGLayerRef layerRef= CGLayerCreateWithContext(ctx,self.backgroundImage.bounds.size,NULL);
+//    CGContextRef layerContext = CGLayerGetContext(layerRef);
+//    NSLog(@"2");
+//
+//    CGContextDrawImage(layerContext, self.backgroundImage.bounds, [[self backgroundImage] image].CGImage);
+//
+//    CGRect bodyFrame = self.bodyImage.frame;
+//    bodyFrame.origin.y = self.backgroundImage.bounds.size.height - bodyFrame.origin.y - bodyFrame.size.height ;
+//    NSLog(@"3");
+//
+//    CGContextDrawImage(layerContext, bodyFrame, [[self bodyImage] image].CGImage);
+//    
+//    //rotate and draw head
+//    CGAffineTransform transform = [self createNextTransform:YES];
+//    
+//    CGContextTranslateCTM(layerContext, self.backgroundImage.bounds.size.width*0.5, self.backgroundImage.bounds.size.height*0.5);
+//    CGContextConcatCTM(layerContext, transform);
+//    CGContextTranslateCTM(layerContext, -self.backgroundImage.bounds.size.width*0.5, -self.backgroundImage.bounds.size.height*0.5);
+//    NSLog(@"4");
+//
+//    CGRect headFrame = self.headImageView.frame;
+//    headFrame.origin.y = self.backgroundImage.bounds.size.height - self.bobblingHeadView.frame.origin.y - headFrame.size.height;
+//    headFrame.origin.x = self.backgroundImage.bounds.size.width/2 - headFrame.size.width/2;
+//    CGContextDrawImage(layerContext, headFrame, headImage.CGImage);
+//    NSLog(@"5");
+//
+//    CGContextTranslateCTM(ctx, 0.0, self.backgroundImage.bounds.size.height);
+//    CGContextScaleCTM(ctx, 1.0, -1.0);
+//    CGContextDrawLayerInRect(ctx,self.backgroundImage.bounds,layerRef);
+//    NSLog(@"6");
+//
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return newImage;
+//}
 
+-(UIImage*)backgroundImageWithBody{
     UIGraphicsBeginImageContextWithOptions(self.backgroundImage.bounds.size, NO, 0.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGLayerRef layerRef= CGLayerCreateWithContext(ctx,self.backgroundImage.bounds.size,NULL);
     CGContextRef layerContext = CGLayerGetContext(layerRef);
-
     CGContextDrawImage(layerContext, self.backgroundImage.bounds, [[self backgroundImage] image].CGImage);
-
+    
     CGRect bodyFrame = self.bodyImage.frame;
     bodyFrame.origin.y = self.backgroundImage.bounds.size.height - bodyFrame.origin.y - bodyFrame.size.height ;
-
     CGContextDrawImage(layerContext, bodyFrame, [[self bodyImage] image].CGImage);
     
-    //rotate and draw head
-    CGAffineTransform transform = [self createNextTransform:YES];
-    
-    CGContextTranslateCTM(layerContext, self.backgroundImage.bounds.size.width*0.5, self.backgroundImage.bounds.size.height*0.5);
-    CGContextConcatCTM(layerContext, transform);
-    CGContextTranslateCTM(layerContext, -self.backgroundImage.bounds.size.width*0.5, -self.backgroundImage.bounds.size.height*0.5);
-    
-    CGRect headFrame = self.headImageView.frame;
-    headFrame.origin.y = self.backgroundImage.bounds.size.height - self.bobblingHeadView.frame.origin.y - headFrame.size.height;
-    headFrame.origin.x = self.backgroundImage.bounds.size.width/2 - headFrame.size.width/2;
-    CGContextDrawImage(layerContext, headFrame, headImage.CGImage);
-
     CGContextTranslateCTM(ctx, 0.0, self.backgroundImage.bounds.size.height);
     CGContextScaleCTM(ctx, 1.0, -1.0);
     CGContextDrawLayerInRect(ctx,self.backgroundImage.bounds,layerRef);
@@ -365,6 +390,32 @@ interstitial {
     return newImage;
 }
 
+-(UIImage*)createBobbleFrame:(UIImage*)headImage withBackground:(UIImage*)bkgdImage{
+    
+    UIGraphicsBeginImageContextWithOptions(bkgdImage.size, NO, 0.0f);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGLayerRef layerRef= CGLayerCreateWithContext(ctx,bkgdImage.size,NULL);
+    CGContextRef layerContext = CGLayerGetContext(layerRef);
+    
+    CGContextDrawImage(layerContext, CGRectMake(0,0,bkgdImage.size.width, bkgdImage.size.height), bkgdImage.CGImage);
+    CGAffineTransform transform = [self createNextTransform:YES];
+    
+    CGContextTranslateCTM(layerContext, bkgdImage.size.width*0.5, self.backgroundImage.bounds.size.height*0.5);
+    CGContextConcatCTM(layerContext, transform);
+    CGContextTranslateCTM(layerContext, -bkgdImage.size.width*0.5, -bkgdImage.size.height*0.5);
+    
+    CGRect headFrame = self.headImageView.frame;
+    headFrame.origin.y = bkgdImage.size.height - self.bobblingHeadView.frame.origin.y - headFrame.size.height;
+    headFrame.origin.x = bkgdImage.size.width/2 - headFrame.size.width/2;
+    CGContextDrawImage(layerContext, headFrame, headImage.CGImage);
+ 
+    CGContextTranslateCTM(ctx, 0.0, bkgdImage.size.height);
+    CGContextScaleCTM(ctx, 1.0, -1.0);
+    CGContextDrawLayerInRect(ctx,CGRectMake(0,0,bkgdImage.size.width, bkgdImage.size.height),layerRef);
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+
+    return newImage;
+}
 
 -(void)resetBobble{
     
@@ -376,8 +427,6 @@ interstitial {
     yPositiveDirection = YES;
     rotateClockwise = YES;
     
-    NSLog(@"alpha of head:%d", CGImageGetAlphaInfo(self.headImageView.image.CGImage));
-
     [self.headImageView setImage: [self applyTransform:CGAffineTransformIdentity toImage:self.headImageView.image]];
 }
 
@@ -418,8 +467,11 @@ interstitial {
 - (void) writeImagesAsMovieToPath:(NSString*)path {
     [self resetBobble];
 
-    UIImage *first = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:0] layerRef:nil context:nil];
-    
+    UIImage *bkgdImage = [self backgroundImageWithBody];
+
+    UIImage *first = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:0] withBackground:bkgdImage];
+    UIGraphicsEndImageContext();
+
     NSString *documents = [NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0];
     NSInteger randomNumber = arc4random();
     [APP_DELEGATE setOutputFileName:[NSString stringWithFormat:@"%d",randomNumber]];
@@ -486,40 +538,28 @@ interstitial {
     int fps = FRAMES_PER_SEC;
     CMTime frameTime = CMTimeMake(1, fps);
     UIImage *imgFrame = nil;
-    
-    int mouthIndex = 0;
-    
+        
     int frameNum = MAX([[_audioRecorder mouthLevels] count],200);
     int mouthvariety = 0;
+
+    
+    
     for (int i = 0; i < frameNum; i++) {
         if(i%10==0)
             NSLog(@"frame %d", i);
         
         @autoreleasepool {
-            
-            
-//            CGContextRef layerContext = CGLayerGetContext(layerRef);
-//            CGContextDrawImage(layerContext, rect, ((UIImage*)[_headWithMouthImages objectAtIndex:_mouthLevels[i]]).CGImage);
-//            
-//            imgFrame = [self applyTransform:[self createNextTransform] fromLayerRef:layerRef andContext:ctx];
-//            
-//            imgFrame = [self addBackgroundImage:imgFrame];
-    
+
+
             if (i >= [[_audioRecorder mouthLevels] count]) {
                 mouthvariety = 0;
             }else{
                 mouthvariety = [[[_audioRecorder mouthLevels] objectAtIndex:i] intValue];
             }
-            
-            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:mouthvariety] layerRef:nil context:nil];
-//
-//            CGContextRef layerContext = CGLayerGetContext(layerRef);
-//            CGContextDrawImage(layerContext, rect, ((UIImage*)[_headWithMouthImages objectAtIndex:_mouthLevels[i]]).CGImage);
-//            
-//            imgFrame = [self applyTransform:[self createNextTransform] fromLayerRef:layerRef andContext:ctx];
-//            
-//            imgFrame = [self addBackgroundImage:imgFrame];
-//            [APP_DELEGATE setPercentLoaded:i/200.f];
+
+        
+            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:mouthvariety] withBackground:bkgdImage];
+
             
             if (adaptor.assetWriterInput.readyForMoreMediaData){
                 
@@ -539,6 +579,8 @@ interstitial {
             }
         }
     }
+    UIGraphicsEndImageContext();
+
     if(pxbuffer)
         CVBufferRelease(pxbuffer);
     

@@ -67,16 +67,8 @@ NSString *const FBSessionStateChangedNotification = @"com.blankworldwide.bobblef
 
 -(void)initializeBobbleFontDict{
     
-    self.bobbleFontDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Foco-Bold", @"1000",
-                           @"Foco-BoldItalic", @"1001",
-                           @"Foco-Italic", @"1002",
-                           @"Foco-Regular", @"1003",
-                           @"FocoBlack-Italic", @"1004",
-                           @"FocoBlack-Regular", @"1005",
-                           @"FocoLight-Italic", @"1006",
-                           @"Foco-Regular", @"1007",
-                           @"Foco-Regular", @"1008",
-                           @"FocoLight-Regular", @"1009",
+    self.bobbleFontDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Unkempt-Bold", @"1000",
+                           @"Unkempt-Bold", @"1001",
                            nil];
    
 }

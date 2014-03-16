@@ -74,6 +74,8 @@
 		889DBD3918D2B6D5008E0E38 /* DiracAudioPlayerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 889DBD3418D2B6D5008E0E38 /* DiracAudioPlayerBase.mm */; };
 		889DBD3A18D2B6D5008E0E38 /* DiracFxAudioPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 889DBD3618D2B6D5008E0E38 /* DiracFxAudioPlayer.mm */; };
 		889DBD3E18D2B741008E0E38 /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 889DBD3D18D2B741008E0E38 /* Utilities.mm */; };
+		889DBD4518D5D130008E0E38 /* Unkempt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 889DBD4318D5D130008E0E38 /* Unkempt-Bold.ttf */; };
+		889DBD4618D5D130008E0E38 /* Unkempt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 889DBD4418D5D130008E0E38 /* Unkempt-Regular.ttf */; };
 		88B57F6616E5869F00A46CC6 /* app_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88B57F6516E5869F00A46CC6 /* app_icon@2x.png */; };
 		88BC280115AD01910049B353 /* IntroPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88BC280015AD01910049B353 /* IntroPageViewController.m */; };
 		88C44E0615CEDAA30004C5FF /* TouchImageView_Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C44E0515CEDAA30004C5FF /* TouchImageView_Private.m */; };
@@ -374,6 +376,8 @@
 		889DBD3618D2B6D5008E0E38 /* DiracFxAudioPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DiracFxAudioPlayer.mm; sourceTree = "<group>"; };
 		889DBD3C18D2B741008E0E38 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		889DBD3D18D2B741008E0E38 /* Utilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Utilities.mm; sourceTree = "<group>"; };
+		889DBD4318D5D130008E0E38 /* Unkempt-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Unkempt-Bold.ttf"; sourceTree = "<group>"; };
+		889DBD4418D5D130008E0E38 /* Unkempt-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Unkempt-Regular.ttf"; sourceTree = "<group>"; };
 		88B57F6516E5869F00A46CC6 /* app_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app_icon@2x.png"; sourceTree = "<group>"; };
 		88BC27FF15AD01910049B353 /* IntroPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroPageViewController.h; sourceTree = "<group>"; };
 		88BC280015AD01910049B353 /* IntroPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroPageViewController.m; sourceTree = "<group>"; };
@@ -719,6 +723,15 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		889DBD4218D5D130008E0E38 /* Unkempt */ = {
+			isa = PBXGroup;
+			children = (
+				889DBD4318D5D130008E0E38 /* Unkempt-Bold.ttf */,
+				889DBD4418D5D130008E0E38 /* Unkempt-Regular.ttf */,
+			);
+			path = Unkempt;
+			sourceTree = "<group>";
+		};
 		88CBEB721831332D006FD106 /* nonretina */ = {
 			isa = PBXGroup;
 			children = (
@@ -1057,6 +1070,7 @@
 				88FD58621880100F009C0444 /* FlurryAds */,
 				8834275117E89A4200AA1B9E /* TestFlightSDK2.0.0 */,
 				8834275B17E89B9A00AA1B9E /* Flurry */,
+				889DBD4218D5D130008E0E38 /* Unkempt */,
 				88D73E16166976020010091A /* Foco */,
 				88ED07E515A880FB009848E8 /* BobbleFriends-Info.plist */,
 				88ED07E615A880FB009848E8 /* InfoPlist.strings */,
@@ -1202,6 +1216,7 @@
 				88CBEC5D1831332D006FD106 /* btn_next_off.png in Resources */,
 				8834275917E89A4200AA1B9E /* README.md in Resources */,
 				88CBECD61831332D006FD106 /* btn_record_on@2x.png in Resources */,
+				889DBD4518D5D130008E0E38 /* Unkempt-Bold.ttf in Resources */,
 				88CBECBF1831332D006FD106 /* btn_background_on@2x.png in Resources */,
 				88CBEC701831332D006FD106 /* btn_stop_btn_off.png in Resources */,
 				88CBEC561831332D006FD106 /* btn_dont_show_off.png in Resources */,
@@ -1331,6 +1346,7 @@
 				88CBECE21831332D006FD106 /* btn_view_saved_off@2x.png in Resources */,
 				8834276017E8A39800AA1B9E /* Default-568h@2x.png in Resources */,
 				88CBEC581831332D006FD106 /* btn_female_mouth_off.png in Resources */,
+				889DBD4618D5D130008E0E38 /* Unkempt-Regular.ttf in Resources */,
 				88D4446D175F442B00AE199B /* Defaults.plist in Resources */,
 				88CBEC871831332D006FD106 /* view_saved_inside_shelf.png in Resources */,
 				88CBEC6A1831332D006FD106 /* btn_saveshare_on.png in Resources */,
