@@ -489,7 +489,9 @@ interstitial {
     
     int mouthIndex = 0;
     
-    for (int i = 0; i < [[_audioRecorder mouthLevels] count]; i++) {
+    int frameNum = MAX([[_audioRecorder mouthLevels] count],200);
+    int mouthvariety = 0;
+    for (int i = 0; i < frameNum; i++) {
         if(i%10==0)
             NSLog(@"frame %d", i);
         
@@ -503,9 +505,13 @@ interstitial {
 //            
 //            imgFrame = [self addBackgroundImage:imgFrame];
     
-            mouthIndex = i;//MAX(i/3-10,0);
-            NSLog(@"%d",[[[_audioRecorder mouthLevels] objectAtIndex:mouthIndex] intValue]);
-            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:[[[_audioRecorder mouthLevels] objectAtIndex:mouthIndex] intValue]] layerRef:nil context:nil];
+            if (i >= [[_audioRecorder mouthLevels] count]) {
+                mouthvariety = 0;
+            }else{
+                mouthvariety = [[[_audioRecorder mouthLevels] objectAtIndex:i] intValue];
+            }
+            
+            imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:mouthvariety] layerRef:nil context:nil];
 //
 //            CGContextRef layerContext = CGLayerGetContext(layerRef);
 //            CGContextDrawImage(layerContext, rect, ((UIImage*)[_headWithMouthImages objectAtIndex:_mouthLevels[i]]).CGImage);

@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "416513427.648371"
+            timestampString = "416662910.631165"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
+            startingLineNumber = "580"
+            endingLineNumber = "580"
             landmarkName = "-addSoundToVideo:"
             landmarkType = "5">
          </BreakpointContent>
@@ -321,7 +321,7 @@
                   symbolName = "-[ShareViewController displayComposerSheet:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ShareViewController.m"
-                  timestampString = "416513874.300883"
+                  timestampString = "416665427.684257"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "307"
@@ -335,7 +335,7 @@
                   symbolName = "-[ShareViewController displayComposerSheet:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/ShareViewController.m"
-                  timestampString = "416513874.301049"
+                  timestampString = "416665427.684413"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "307"
@@ -348,7 +348,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/SavedBobbleView.m"
@@ -361,13 +361,13 @@
             landmarkType = "5">
             <Locations>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301196"
+                  timestampString = "416665427.684545"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -375,13 +375,13 @@
                   offsetFromSymbolStart = "44">
                </Location>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301328"
+                  timestampString = "416665427.684666"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -389,13 +389,13 @@
                   offsetFromSymbolStart = "274">
                </Location>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "-[SavedBobbleView viewBobbleButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301455"
+                  timestampString = "416665427.684791"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "69"
@@ -427,7 +427,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301654"
+                  timestampString = "416665427.684922"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -441,7 +441,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301803"
+                  timestampString = "416665427.685043"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -455,7 +455,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.301947"
+                  timestampString = "416665427.685154"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
@@ -469,7 +469,7 @@
                   symbolName = "-[SavedBobbleView shareButtonPressed:]"
                   moduleName = "BobbleFriends"
                   urlString = "file:///Users/pkamm/Documents/ios/BobbleFriends/BobbleFriends/SavedBobbleView.m"
-                  timestampString = "416513874.302096"
+                  timestampString = "416665427.685269"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "45"
