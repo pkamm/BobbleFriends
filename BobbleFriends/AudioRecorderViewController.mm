@@ -87,7 +87,7 @@ long myReadData(float **chdata, long numFrames, void *userData)
 
 -(void)viewDidDisappear:(BOOL)animated{
     [APP_DELEGATE setSoundPitchValue:effectPitch];
-    [self createNewAudioFileWithPitch:effectPitch];
+//    [self createNewAudioFileWithPitch:effectPitch];
 }
 
 -(void)increaseTimer:(NSTimer*)timer{
@@ -144,7 +144,7 @@ long myReadData(float **chdata, long numFrames, void *userData)
             audioManager.inputBlock = nil;
             [fileWriter release];
             NSLog(@"Done recording");
-            [self createNewAudioFileWithPitch:1];
+            //[self createNewAudioFileWithPitch:1];
             [self.mouthTimer invalidate];
         }
     };

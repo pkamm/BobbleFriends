@@ -92,6 +92,7 @@
 - (OSStatus)fftPassThrough:(UInt32)inNumberFrames buffer:(float*)sampleBuffer;
 
 -(void)diracPlayerDidFinishPlaying:(DiracAudioPlayerBase*)player successfully:(BOOL)flag;
+-(void)createNewAudioFileWithPitch:(float)pitch;
 
 
 

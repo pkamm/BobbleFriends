@@ -197,6 +197,7 @@ interstitial {
     } completion:^(BOOL finished) {
       //  [_audioRecorder removeFromParentViewController];
       //  _audioRecorder = nil;
+        [_audioRecorder createNewAudioFileWithPitch:1];
         [_audioRecorder.view setHidden:YES];
     }];
 }
@@ -386,6 +387,7 @@ interstitial {
     CGContextDrawLayerInRect(ctx,self.backgroundImage.bounds,layerRef);
 
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    CFRelease(layerRef);
     UIGraphicsEndImageContext();
     return newImage;
 }
@@ -414,6 +416,8 @@ interstitial {
     CGContextDrawLayerInRect(ctx,CGRectMake(0,0,bkgdImage.size.width, bkgdImage.size.height),layerRef);
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
 
+    CFRelease(layerRef);
+    UIGraphicsEndImageContext();
     return newImage;
 }
 
@@ -541,8 +545,6 @@ interstitial {
         
     int frameNum = MAX([[_audioRecorder mouthLevels] count],200);
     int mouthvariety = 0;
-
-    
     
     for (int i = 0; i < frameNum; i++) {
         if(i%10==0)
@@ -557,9 +559,7 @@ interstitial {
                 mouthvariety = [[[_audioRecorder mouthLevels] objectAtIndex:i] intValue];
             }
 
-        
             imgFrame = [self createBobbleFrame:[_headWithMouthImages objectAtIndex:mouthvariety] withBackground:bkgdImage];
-
             
             if (adaptor.assetWriterInput.readyForMoreMediaData){
                 
@@ -579,7 +579,6 @@ interstitial {
             }
         }
     }
-    UIGraphicsEndImageContext();
 
     if(pxbuffer)
         CVBufferRelease(pxbuffer);

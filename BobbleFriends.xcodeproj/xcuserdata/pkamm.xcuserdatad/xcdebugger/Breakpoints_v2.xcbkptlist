@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BobbleFriends/MainBobbleViewController.m"
-            timestampString = "416679260.263592"
+            timestampString = "416685940.648246"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "639"
-            endingLineNumber = "639"
+            startingLineNumber = "621"
+            endingLineNumber = "621"
             landmarkName = "-addSoundToVideo:"
             landmarkType = "5">
          </BreakpointContent>
